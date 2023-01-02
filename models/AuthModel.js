@@ -28,10 +28,18 @@ export const AuthData = db.define('_authData',{
     type:DataTypes.STRING(100)
   },
   setting:{
-    type:DataTypes.JSON
+    type:DataTypes.JSON,
+    get(){
+      const rawValue = this.getDataValue('setting');
+      return JSON.parse(rawValue)
+    }
   },
   shortcuts:{
-    type:DataTypes.JSON
+    type:DataTypes.JSON,
+    get(){
+      const rawValue = this.getDataValue('shortcuts');
+      return JSON.parse(rawValue)
+    }
   }
 },{ timestamps: false });
 
