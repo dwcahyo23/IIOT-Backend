@@ -35,6 +35,7 @@ export const AuthData = db.define('_authData',{
   }
 },{ timestamps: false });
 
+
 (async() => {
   await db.sync();
 })();

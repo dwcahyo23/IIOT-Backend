@@ -10,15 +10,15 @@ export const signUp = async (req, res) => {
     const AuthCreate = await AuthData.create({
       password: password,
       role: 'admin',
-      data: {
+      data: [{
         displayName: displayName,
         photoURL: '',
         email: email,
         setting: {},
         shortcuts: []
-      }
+    }]
     }, {
-      include: [DataUser]
+      include:[DataUser]
     });
 
     res.status(200).json(AuthCreate)
