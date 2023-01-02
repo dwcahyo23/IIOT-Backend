@@ -1,23 +1,26 @@
 import { AuthData, AuthUser } from "../models/AuthModel.js";
+import bcrypt from "bcrypt";
 
-const DataUser = AuthData.belongsTo(AuthUser, { as: 'data' });
+const DataUser = AuthUser.hasOne(AuthData,{as:'data'});
 
 export const signUp = async (req, res) => {
-  console.log(req.body)
   const {displayName,email,password} = req.body;
+  const salt = await bcrypt.genSalt();
+  const hashPassword = await bcrypt.hash(password,salt);
   const error = []
   try {
-    const AuthCreate = await AuthData.create({
-      password: password,
-      role: 'admin',
-      data: [{
+    console.log(displayName)
+    const AuthCreate = await AuthUser.create({
+      password:password,
+      role:"admin",
+      data:[{
         displayName: displayName,
         photoURL: '',
         email: email,
         setting: {},
         shortcuts: []
-    }]
-    }, {
+      }]
+    },{
       include:[DataUser]
     });
 
