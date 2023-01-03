@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize";
-import db from "../config/sequelize.js";
+import sequelize from "../config/sequelize.js";
 
 const {DataTypes} = Sequelize;
 
-export const AuthUser = db.define('_authUsers',{
+export const AuthUser = sequelize.define('_authUsers',{
   uuid:{
     type:DataTypes.UUID,
     defaultValue:DataTypes.UUIDV4,
@@ -17,7 +17,7 @@ export const AuthUser = db.define('_authUsers',{
   }
 },{ timestamps: false });
 
-export const AuthData = db.define('_authData',{
+export const AuthData = sequelize.define('_authData',{
   displayName:{
     type:DataTypes.STRING(100)
   },
@@ -43,7 +43,3 @@ export const AuthData = db.define('_authData',{
   }
 },{ timestamps: false });
 
-
-(async() => {
-  await db.sync();
-})();
