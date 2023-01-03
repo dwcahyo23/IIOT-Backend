@@ -16,3 +16,7 @@ export const postMachineIndex = async (req,res) => {
 		console.log(error.message)
 	}
 }
+
+export const postMachineItem = async (req,res) => {
+	
+}
