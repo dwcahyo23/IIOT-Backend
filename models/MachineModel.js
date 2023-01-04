@@ -9,23 +9,11 @@ export const MachineIndex = sequelize.define('machine_index',{
     defaultValue:DataTypes.UUIDV4,
     primaryKey:true,
   },
-  mch_code:{
-    type: DataTypes.STRING(8),
-		validate:{
-			notEmpty:{
-				msg: "Machine Code can't be empty"
-			}
-		}
-  },
-  mch_name:{
-    type: DataTypes.STRING(20)
-  },
-  mch_com:{
-    type: DataTypes.INTEGER(1)
-  },
-  mch_loc:{
-    type: DataTypes.STRING(20)
-  }
+  mch_code:DataTypes.STRING(8),
+  mch_name:DataTypes.STRING(20),
+  mch_com:DataTypes.INTEGER(1),
+  mch_loc:DataTypes.STRING(20),
+	mch_process:DataTypes.STRING(20),
 },{ timestamps: false })
 
 export const MachineItems = sequelize.define('machine_items',{
