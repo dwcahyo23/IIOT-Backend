@@ -28,12 +28,15 @@ export const AuthData = sequelize.define('_authData', {
 	email: {
 		type: DataTypes.STRING(100)
 	},
-	setting: {
+	settings: {
 		type: DataTypes.JSON,
 		get() {
-			const rawValue = this.getDataValue('setting');
+			const rawValue = this.getDataValue('settings');
 			return JSON.parse(rawValue)
-		}
+		},
+		// set(value){
+		// 	this.setDataValue('value', JSON.stringify(value));
+		// }
 	},
 	shortcuts: {
 		type: DataTypes.JSON,

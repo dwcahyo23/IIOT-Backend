@@ -8,6 +8,8 @@ import Utf8 from "crypto-js/enc-utf8.js";
 import jwtDecode from "jwt-decode";
 
 const DataUser = AuthUser.hasOne(AuthData, { as: "data" });
+// AuthUser.hasOne(AuthData);
+//AuthData.belongsTo(AuthUser);
 
 export const signUp = async (req, res) => {
 	const { displayName, email, password } = req.body;
@@ -36,7 +38,7 @@ export const signUp = async (req, res) => {
 							displayName: displayName,
 							photoURL: "",
 							email: email,
-							setting: {
+							settings: {
 								layout: {},
 								theme: {},
 							},
@@ -73,6 +75,7 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
 	const { email, password } = req.body.data;
+	// const { email, password } = req.body;
 	const error = [];
 	try {
 		const AuthFind = await AuthUser.findAll({
@@ -148,6 +151,32 @@ export const accessToken = async (req, res) => {
 
 
 };
+
+export const updateApp = async (req,res) => {
+	//console.log(req.body.user.data.settings.theme)
+	//console.log(req.body.user.data.id)
+	try {
+
+		//*! untuk update fungsi get pada auth model harus dihapus */
+		//** cari solusinya... untuk update layout seetttin */
+
+		const response = await AuthData.update({
+			settings: "req.body.user.data.settings"
+		},
+		{
+			where: {
+				id: req.body.user.data.id
+			}
+		})
+		console.log("success")
+		// return res.status(200).json(response)
+		// console.log(user)
+	} catch (error) {
+		console.log(error.message)
+	}
+
+}
+
 
 /**
  * JWT Token Generator/Verifier Helpers
