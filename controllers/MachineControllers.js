@@ -1,6 +1,9 @@
 import { MachineIndex, MachineItems } from "../models/MachineModel.js";
 
-const DataItems = MachineIndex.hasMany(MachineItems, { as: 'data' });
+// const DataItems = MachineIndex.hasMany(MachineItems, { as: 'data' });
+
+MachineIndex.hasMany(MachineItems);
+MachineItems.belongsTo(MachineIndex);
 
 export const postMachineIndex = async (req, res) => {
 	const { mch_code, mch_name, mch_com, mch_loc } = req.body;
@@ -72,7 +75,12 @@ export const deleteMachineIndex = async (req, res) => {
 
 //* Edit by form
 export const postMachineItem = async (req, res) => {
-
+	const data = req.body;
+	try {
+		const response = await MachineItems.create(data);
+	} catch (error) {
+		console.log(error.message);
+	}
 }
 
 export const bulkMachineItem = async (req, res) => {
@@ -91,7 +99,8 @@ export const getMachineItem = async (req, res) => {
 		const response = await MachineItems.findOne({
 			where: {
 				uuid: req.params.uuid
-			}
+			},
+			include: MachineIndex,
 		})
 		res.status(200).json(response)
 	} catch (error) {
@@ -101,7 +110,7 @@ export const getMachineItem = async (req, res) => {
 
 export const getMachineItems = async (req, res) => {
 	try {
-		const response = await MachineItems.findAll({})
+		const response = await MachineItems.findAll({ include: MachineIndex })
 		res.status(200).json(response)
 	} catch (error) {
 		console.log(error.message);
