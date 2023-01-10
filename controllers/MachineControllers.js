@@ -33,6 +33,16 @@ export const bulkMachineIndex = async (req, res) => {
 	}
 }
 
+export const getMachines = async (req, res) => {
+	try {
+		const response = await MachineIndex.findAll({})
+		res.status(200).json(response)
+	} catch (error) {
+		console.log(error.message);
+	}
+}
+
+
 export const getMachineIndex = async (req, res) => {
 	try {
 		const response = await MachineIndex.findOne({
@@ -116,7 +126,6 @@ export const getMachineItems = async (req, res) => {
 		console.log(error.message);
 	}
 }
-
 
 export const updateMachineItem = async (req, res) => {
 	const data = req.body;

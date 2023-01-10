@@ -4,6 +4,7 @@ import {
 	postMachineIndex,
 	bulkMachineIndex,
 	getMachineIndex,
+	getMachines,
 	updateMachineIndex,
 	deleteMachineIndex,
 	// items
@@ -21,7 +22,8 @@ const router = express.Router();
 
 router.post('/machine', verifyToken, postMachineIndex);
 router.post('/machines', bulkMachineIndex);
-router.get('/machine/:uuid', verifyToken, getMachineIndex);
+router.get('/machines', getMachines);
+router.get('/machine/:uuid', getMachineIndex);
 router.patch('/machine/:uuid', verifyToken, updateMachineIndex);
 router.delete('/machine/:uuid', verifyToken, deleteMachineIndex);
 
