@@ -6,8 +6,8 @@ const { DataTypes } = Sequelize;
 
 export const AuthUser = sequelize.define('_authUsers', {
 	uuid: {
-		type: DataTypes.UUID,
-		defaultValue: Utils.generateGUID(),
+		type: DataTypes.STRING(8),
+		defaultValue: DataTypes.UUIDV4,
 		primaryKey: true,
 	},
 	password: {

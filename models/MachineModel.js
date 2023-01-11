@@ -5,7 +5,7 @@ const { DataTypes } = Sequelize;
 
 export const MachineIndex = sequelize.define('machine_index', {
 	uuid: {
-		type: DataTypes.UUID,
+		type: DataTypes.STRING(8),
 		defaultValue: DataTypes.UUIDV4,
 		primaryKey: true,
 	},
@@ -18,7 +18,7 @@ export const MachineIndex = sequelize.define('machine_index', {
 
 export const MachineItems = sequelize.define('machine_items', {
 	uuid: {
-		type: DataTypes.UUID,
+		type: DataTypes.STRING(8),
 		defaultValue: DataTypes.UUIDV4,
 		primaryKey: true,
 	},

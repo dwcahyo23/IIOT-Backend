@@ -29,7 +29,7 @@ export const bulkMachineIndex = async (req, res) => {
 			{ fields: ['mch_code', 'mch_name', 'mch_process', 'mch_com', 'mch_loc'] })
 		res.status(200).json(response)
 	} catch (error) {
-		console.log(error.message);
+		console.log(error);
 	}
 }
 
@@ -84,20 +84,11 @@ export const deleteMachineIndex = async (req, res) => {
 }
 
 //* Edit by form
-export const postMachineItem = async (req, res) => {
-	const data = req.body;
-	try {
-		const response = await MachineItems.create(data);
-	} catch (error) {
-		console.log(error.message);
-	}
-}
-
 export const bulkMachineItem = async (req, res) => {
 	console.log(req.body)
 	const data = req.body
 	try {
-		const response = await MachineItem.bulkCreate(data)
+		const response = await MachineItems.bulkCreate(data)
 		res.status(200).json(response)
 	} catch (error) {
 		console.log(error.message);
@@ -128,28 +119,53 @@ export const getMachineItems = async (req, res) => {
 }
 
 export const updateMachineItem = async (req, res) => {
-	const data = req.body;
+	const { bom, category, item_name, item_life_time, item_lead_time, item_status, machineIndexUuid, uuid } = req.body;
 	try {
-		const response = await MachineItem.update(data,
-			{
+		const isItemExists = await MachineItems.findAll({
+			where: { uuid: uuid },
+		});
+		console.log(isItemExists.length)
+
+		if (isItemExists.length > 0) {
+			const update = await MachineItems.update({ bom, category, item_name, item_life_time, item_lead_time, item_status, machineIndexUuid },
+				{
+					where: {
+						uuid: req.params.uuid
+					}
+				})
+			const response = await MachineItems.findOne({
 				where: {
 					uuid: req.params.uuid
-				}
+				},
+				include: MachineIndex,
 			})
-		res.status(200).json(response)
+			return res.status(200).json(response)
+		} else {
+			const create = await MachineItems.create({ bom, category, item_name, item_life_time, item_lead_time, item_status, machineIndexUuid });
+			const response = await MachineItems.findOne({
+				where: {
+					uuid: req.params.uuid
+				},
+				include: MachineIndex,
+			})
+			return res.status(200).json(create)
+		}
+
 	} catch (error) {
-		console.log(error.message);
+		console.log(error);
 	}
 }
 
 export const deleteMachineItem = async (req, res) => {
+	const uuid = req.body
 	try {
-		const response = await MachineItem.destroy({
+		const response = await MachineItems.destroy({
 			where: {
-				uuid: req.params.uuid
+				uuid: uuid
 			}
 		})
+		res.status(200).json(response)
 	} catch (error) {
-
+		console.log(error.message);
 	}
 }
