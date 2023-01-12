@@ -148,7 +148,7 @@ export const updateMachineItem = async (req, res) => {
 				},
 				include: MachineIndex,
 			})
-			return res.status(200).json(create)
+			return res.status(200).json(response)
 		}
 
 	} catch (error) {

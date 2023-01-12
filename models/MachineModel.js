@@ -11,7 +11,7 @@ export const MachineIndex = sequelize.define('machine_index', {
 	},
 	mch_code: DataTypes.STRING(8),
 	mch_name: DataTypes.STRING(20),
-	mch_com: DataTypes.INTEGER(1),
+	mch_com: DataTypes.STRING(8),
 	mch_loc: DataTypes.STRING(20),
 	mch_process: DataTypes.STRING(20),
 }, { timestamps: false })
@@ -28,9 +28,27 @@ export const MachineItems = sequelize.define('machine_items', {
 	item_life_time: DataTypes.INTEGER,
 	item_lead_time: DataTypes.INTEGER,
 	change_at: DataTypes.DATE(6),
-	change_next: DataTypes.DATE(6),
+	featuredImageId: {
+		type: DataTypes.STRING(8),
+		defaultValue: DataTypes.UUIDV4,
+	},
+	images: {
+		type: DataTypes.JSON,
+		defaultValue: [],
+		get() {
+			const rawValue = this.getDataValue('images');
+			return JSON.parse(rawValue)
+		}
+	},
+	changes: {
+		type: DataTypes.JSON,
+		get() {
+			const rawValue = this.getDataValue('changes');
+			return JSON.parse(rawValue)
+		}
+	},
 	item_status: {
-		type: DataTypes.INTEGER(1),
+		type: DataTypes.INTEGER(2),
 		defaultValue: 1
 	}
 })
