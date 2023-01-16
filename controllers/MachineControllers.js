@@ -114,12 +114,9 @@ export const getMachineItem = async (req, res) => {
 };
 
 export const getMachineItems = async (req, res) => {
-  try {
-    const response = await MachineItems.findAll({ include: MachineIndex });
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error.message);
-  }
+  await MachineItems.findAll({ include: MachineIndex })
+    .then((result) => res.status(200).json(result))
+    .catch((err) => console.log(err));
 };
 
 export const updateMachineItem = async (req, res) => {
@@ -148,7 +145,7 @@ export const updateMachineItem = async (req, res) => {
       item_lead_time,
       item_life_time,
       item_status,
-      machineIndexUuid,
+      machineIndexUuid: machineIndexUuid.value,
       images,
       featuredImageId,
     }, {
@@ -156,16 +153,17 @@ export const updateMachineItem = async (req, res) => {
         uuid,
       },
       sideEffects: false,
-    }).then(() => {
-      MachineItems.findOne({
-        where: { uuid },
-        include: MachineIndex,
+    })
+      .then(() => {
+        MachineItems.findOne({
+          where: { uuid },
+          sideEffects: true,
+          include: MachineIndex,
+        }).then((result) => res.status(200).json(result));
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }).then((result) => {
-      res.status(200).json(result);
-    }).catch((err) => {
-      console.log(err);
-    });
   } else {
     await MachineItems.create({
       bom,
@@ -174,18 +172,17 @@ export const updateMachineItem = async (req, res) => {
       item_life_time,
       item_lead_time,
       item_status,
-      machineIndexUuid,
+      machineIndexUuid: machineIndexUuid.value,
       images,
     }).then(() => {
       MachineItems.findOne({
         where: { uuid },
         include: MachineIndex,
+      }).then((result) => res.status(200).json(result));
+    })
+      .catch((err) => {
+        console.log(err);
       });
-    }).then((result) => {
-      res.status(200).send(result);
-    }).catch((err) => {
-      console.log(err);
-    });
   }
 };
 
