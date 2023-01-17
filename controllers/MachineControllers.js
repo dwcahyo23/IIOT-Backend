@@ -1,4 +1,5 @@
 import { MachineIndex, MachineItems } from '../models/MachineModel.js';
+import Utils from '../@utils/utils.js';
 
 // const DataItems = MachineIndex.hasMany(MachineItems, { as: 'data' });
 
@@ -131,11 +132,20 @@ export const updateMachineItem = async (req, res) => {
     uuid,
     featuredImageId,
     images,
+    check,
+    check_date,
   } = req.body;
-  const isItemExists = await MachineItems.findAll({
+  const change = {
+    id: Utils.generateGUID(),
+    date: check_date,
+    value: check,
+  };
+  const isItemExists = await MachineItems.findOne({
     where: { uuid },
     include: MachineIndex,
   });
+
+  console.log(isItemExists.featuredImageId);
 
   if (isItemExists.length > 0) {
     await MachineItems.update({
