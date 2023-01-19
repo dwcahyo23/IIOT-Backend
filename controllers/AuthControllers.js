@@ -225,24 +225,34 @@ export const accessToken = async (req, res) => {
 export const updateApp = async (req, res) => {
   // console.log(req.body.user.data.settings.theme)
   // console.log(req.body.user.data.id)
-  try {
-    //* ! untuk update fungsi get pada auth model harus dihapus */
-    //* * cari solusinya... untuk update layout seetttin */
+  // try {
+  //   //* ! untuk update fungsi get pada auth model harus dihapus */
+  //   //* * cari solusinya... untuk update layout seetttin */
 
-    const response = await AuthData.update(
-      {
-        settings: 'req.body.user.data.settings',
-      },
-      {
-        where: {
-          id: req.body.user.data.id,
-        },
-      },
-    );
-    console.log('success');
-    // return res.status(200).json(response)
-    // console.log(user)
-  } catch (error) {
-    console.log(error.message);
-  }
+  //   const response = await AuthData.update(
+  //   {
+  //     settings: 'req.body.user.data.settings',
+  //   },
+  //   {
+  //     where: {
+  //       id: req.body.user.data.id,
+  //     },
+  //   },
+  // );
+  //   console.log('success');
+  //   // return res.status(200).json(response)
+  //   // console.log(user)
+  // } catch (error) {
+  //   console.log(error.message);
+  // }
+  await AuthData.update({
+    settings: req.body.user.data.settings,
+  }, {
+    where: {
+      id: req.body.user.data.id,
+    },
+    sideEffects: false,
+  }).then(() => {
+    res.status(200).json({ msg: 'Settings has been saved successfully' });
+  }).catch((err) => console.log(err));
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { MachineIndex, MachineItems } from '../models/MachineModel.js';
 import Utils from '../@utils/utils.js';
 
@@ -140,12 +141,10 @@ export const updateMachineItem = async (req, res) => {
     date: check_date,
     value: check,
   };
-  const isItemExists = await MachineItems.findOne({
+  const isItemExists = await MachineItems.findAll({
     where: { uuid },
     include: MachineIndex,
   });
-
-  console.log(isItemExists.featuredImageId);
 
   if (isItemExists.length > 0) {
     await MachineItems.update({
@@ -155,7 +154,7 @@ export const updateMachineItem = async (req, res) => {
       item_lead_time,
       item_life_time,
       item_status,
-      machineIndexUuid: machineIndexUuid.value,
+      machineIndexUuid,
       images,
       featuredImageId,
     }, {
@@ -163,20 +162,23 @@ export const updateMachineItem = async (req, res) => {
         uuid,
       },
       sideEffects: false,
-    })
-      .then(() => {
-        MachineItems.findOne({
-          where: { uuid },
-          sideEffects: true,
-          include: MachineIndex,
-        }).then((result) => res.status(200).json(result));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    }).then(() => {
+      MachineItems.findOne({
+        where: { uuid },
+        sideEffects: true,
+        include: MachineIndex,
+      }).then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+    }).catch((err) => {
+      console.log(err);
+    });
   } else {
+    const Boms = await MachineItems.findAll({
+      where: { machineIndexUuid: machineIndexUuid.value, category },
+    });
+    const BOM = (`${category}${(machineIndexUuid.label).replace(/\-/g, '')}-${1001 + Boms.length}`);
     await MachineItems.create({
-      bom,
+      bom: BOM,
       category,
       item_name,
       item_life_time,
@@ -189,10 +191,9 @@ export const updateMachineItem = async (req, res) => {
         where: { uuid },
         include: MachineIndex,
       }).then((result) => res.status(200).json(result));
-    })
-      .catch((err) => {
-        console.log(err);
-      });
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 };
 

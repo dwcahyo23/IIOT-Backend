@@ -22,7 +22,7 @@ export const MachineItems = sequelize.define('machine_items', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  bom: DataTypes.STRING(7),
+  bom: DataTypes.STRING(15),
   category: DataTypes.STRING(3),
   item_name: DataTypes.STRING(50),
   item_life_time: DataTypes.INTEGER,
