@@ -15,21 +15,22 @@ export const updateModbus = async (req, res) => {
   });
 
   if (isModbusExists.length > 0) {
-    console.log('uuid:', isModbusExists[0].uuid);
+    // console.log('uuid:', isModbusExists[0].uuid);
+    const datas = JSON.parse(isModbusExists[0].data);
     await Modbus.update({
-      name, data,
+      name, data: [data, ...datas],
     }, {
       where: {
         uuid: isModbusExists[0].uuid,
       },
     })
-      .then(() => res.status(200).json({ msg: 'update data success' }))
-      .catch((err) => console.log(err));
+      .then((response) => res.status(200).json(response))
+      .catch((err) => res.status(400).json(err));
   } else {
     await Modbus.create({
-      name, data,
+      name, data: [data],
     })
       .then(() => res.status(200).json({ msg: 'create data success' }))
-      .catch((err) => console.log(err));
+      .catch((err) => res.status(400).json(err));
   }
 };
