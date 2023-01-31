@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-useless-escape */
+import { format } from 'date-fns';
 import { MachineIndex, MachineItems } from '../models/MachineModel.js';
 import Utils from '../@utils/utils.js';
 
@@ -134,8 +136,10 @@ export const updateMachineItem = async (req, res) => {
     featuredImageId,
     images,
     check,
+    change_at,
     check_date,
   } = req.body;
+  console.log('dateis', format(new Date(change_at), 'yyyy-MM-dd HH:mm:ss'));
   const change = {
     id: Utils.generateGUID(),
     date: check_date,
@@ -155,6 +159,7 @@ export const updateMachineItem = async (req, res) => {
       item_life_time,
       item_status,
       machineIndexUuid,
+      change_at: format(new Date(change_at), 'yyyy-MM-dd HH:mm:ss'),
       images,
       featuredImageId,
     }, {
@@ -184,6 +189,7 @@ export const updateMachineItem = async (req, res) => {
       item_life_time,
       item_lead_time,
       item_status,
+      change_at: format(new Date(change_at), 'yyyy-MM-dd HH:mm:ss'),
       machineIndexUuid: machineIndexUuid.value,
       images,
     }).then(() => {

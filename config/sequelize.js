@@ -14,7 +14,9 @@ const sequelize = new Sequelize(
     dialect: 'mysql',
     define: {
       freezeTableName: true,
+      useUTC: false,
     },
+    timezone: '+07:00',
   },
 );
 
