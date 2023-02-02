@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import * as dotenv from 'dotenv';
-import { Sequelize } from 'sequelize';
-// console.log(`dirname: ${path.join(__dirname, '../.env')}`);
+
 import express from 'express';
 import cors from 'cors';
 import AuthRouter from './router/AuthRouter.js';
