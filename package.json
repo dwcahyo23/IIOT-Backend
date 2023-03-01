@@ -1,12 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "type": "module",
   "description": "IIOTAPPGM",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "build": "babel ./src --out-dir ./build",
+    "start": "node ./build/index.js",
+    "dev": "nodemon --exec npx babel-node src/index.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -33,8 +34,17 @@
     "sequelize": "^6.28.0"
   },
   "devDependencies": {
-    "eslint": "^8.31.0",
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.0",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/runtime": "^7.21.0",
+    "eslint": "^8.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.27.4"
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4"
   }
 }
