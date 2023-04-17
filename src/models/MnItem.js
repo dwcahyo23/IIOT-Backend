@@ -18,4 +18,8 @@ export const MnItem = sequelize.define('mn_item', {
     change_at: {
         type: DataTypes.DATE(6),
     },
+    item_status: {
+        type: DataTypes.INTEGER(2),
+        defaultValue: 1,
+    },
 })

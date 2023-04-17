@@ -49,7 +49,9 @@ export const bulkMachineIndex = async (req, res) => {
 
 export const getMachines = async (req, res) => {
     try {
-        const response = await MachineIndex.findAll({})
+        const response = await MachineIndex.findAll({
+            order: [['mch_code', 'ASC']],
+        })
         res.status(200).json(response)
     } catch (error) {
         console.log(error.message)
