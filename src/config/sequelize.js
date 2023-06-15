@@ -2,6 +2,22 @@
 import * as dotenv from 'dotenv'
 import { Sequelize } from 'sequelize'
 
+const winston = require('winston')
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        //
+        // - Write all logs with importance level of `error` or less to `error.log`
+        // - Write all logs with importance level of `info` or less to `combined.log`
+        //
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+    ],
+})
+
 dotenv.config()
 
 const sequelize = new Sequelize(
@@ -17,6 +33,9 @@ const sequelize = new Sequelize(
             useUTC: false,
         },
         timezone: '+07:00',
+        dialectOptions: { autoJsonMap: false },
+
+        // logging: (msg) => logger.info(msg),
     }
 )
 

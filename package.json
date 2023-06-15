@@ -33,7 +33,8 @@
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "react-image-file-resizer": "^0.4.8",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "winston": "^3.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",

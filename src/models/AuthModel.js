@@ -43,9 +43,13 @@ export const AuthData = sequelize.define(
         },
         shortcuts: {
             type: DataTypes.JSON,
-            get() {
-                const rawValue = this.getDataValue('shortcuts')
-                return JSON.parse(rawValue)
+            get: function () {
+                if (typeof this.getDataValue('shortcuts') == 'string') {
+                    return JSON.parse(this.getDataValue('shortcuts'))
+                } else {
+                    return this.getDataValue('shortcuts')
+                }
+                // console.log(typeof this.getDataValue('data_result'))
             },
         },
     },

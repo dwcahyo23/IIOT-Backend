@@ -42,16 +42,24 @@ export const MachineItems = sequelize.define('machine_items', {
     images: {
         type: DataTypes.JSON,
         defaultValue: [],
-        get() {
-            const rawValue = this.getDataValue('images')
-            return JSON.parse(rawValue)
+        get: function () {
+            if (typeof this.getDataValue('images') == 'string') {
+                return JSON.parse(this.getDataValue('images'))
+            } else {
+                return this.getDataValue('images')
+            }
+            // console.log(typeof this.getDataValue('data_result'))
         },
     },
     changes: {
         type: DataTypes.JSON,
-        get() {
-            const rawValue = this.getDataValue('changes')
-            return JSON.parse(rawValue)
+        get: function () {
+            if (typeof this.getDataValue('changes') == 'string') {
+                return JSON.parse(this.getDataValue('changes'))
+            } else {
+                return this.getDataValue('changes')
+            }
+            // console.log(typeof this.getDataValue('data_result'))
         },
     },
     item_status: {

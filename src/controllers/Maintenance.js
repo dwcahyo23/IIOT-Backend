@@ -1,16 +1,22 @@
 import { Op, Sequelize } from 'sequelize'
 import { MachineIndex } from '../models/MachineModel'
-import { MnCategory } from '../models/MnCategory'
-import { MnAcademy } from '../models/MnAcademy'
-import { MnItem } from '../models/MnItem'
 import { PgMowMtn } from '../models/PgMowMtn'
-import { MnUser } from '../models/MnUser'
+import {
+    MnCategory,
+    MnAcademy,
+    MnItem,
+    MnOil,
+    MnUser,
+} from '../models/MaintenanceModel'
 
 MachineIndex.hasMany(MnAcademy)
 MnAcademy.belongsTo(MachineIndex)
 
 MnAcademy.hasMany(MnItem)
 MnItem.belongsTo(MnAcademy)
+
+MachineIndex.hasMany(MnUser, { foreignKey: 'mch_code' })
+MnUser.belongsTo(MachineIndex, { foreignKey: 'role', targetKey: 'mch_code' })
 
 export default {
     async insCategory(req, res) {
@@ -36,9 +42,27 @@ export default {
         }
     },
 
+    async insUser(req, res) {
+        const { nik, name, role, images, mch_code } = req.body
+        try {
+            const response = await MnUser.create({
+                nik,
+                name,
+                role,
+                images,
+                mch_code,
+            })
+            res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
     async getUser(req, res) {
         try {
-            const response = await MnUser.findAll({})
+            const response = await MnUser.findAll({
+                include: [{ model: MachineIndex }],
+            })
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)

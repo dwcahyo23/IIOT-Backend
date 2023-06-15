@@ -6,6 +6,7 @@ import AuthRouter from './router/AuthRouter.js'
 import MachineRouter from './router/MachineRouter.js'
 import ModbusRouter from './router/ModbusRouter.js'
 import Maintenance from './router/Maintenance.js'
+import ModbusAppRouter from './router/ModbusAppRouter.js'
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ app.use(MachineRouter)
 app.use(ModbusRouter)
 
 Maintenance(app)
+ModbusAppRouter(app)
 
 app.listen(process.env.PORT_APP, () =>
     console.log(`Server up & running in ${process.env.PORT_APP}`)

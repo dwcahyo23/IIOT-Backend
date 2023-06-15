@@ -21,7 +21,7 @@ import { verifyToken } from '../middleware/verifyToken.js'
 const router = express.Router()
 
 router.post('/machine/:uuid', verifyToken, postMachineIndex)
-router.post('/machines', verifyToken, bulkMachineIndex)
+router.post('/machines', bulkMachineIndex)
 router.get('/machines', verifyToken, getMachines)
 router.get('/machine/:uuid', verifyToken, getMachineIndex)
 router.patch('/machine/:uuid', verifyToken, updateMachineIndex)

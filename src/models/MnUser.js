@@ -19,10 +19,26 @@ export const MnUser = sequelize.define(
         images: {
             type: DataTypes.JSON,
             defaultValue: [],
+            get: function () {
+                if (typeof this.getDataValue('images') == 'string') {
+                    return JSON.parse(this.getDataValue('images'))
+                } else {
+                    return this.getDataValue('images')
+                }
+                // console.log(typeof this.getDataValue('data_result'))
+            },
         },
         mch_code: {
             type: DataTypes.JSON,
             defaultValue: [],
+            get: function () {
+                if (typeof this.getDataValue('mch_code') == 'string') {
+                    return JSON.parse(this.getDataValue('mch_code'))
+                } else {
+                    return this.getDataValue('mch_code')
+                }
+                // console.log(typeof this.getDataValue('data_result'))
+            },
         },
     },
     { timestamps: false }
