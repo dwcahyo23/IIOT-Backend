@@ -4,7 +4,6 @@ import express from 'express'
 import cors from 'cors'
 import AuthRouter from './router/AuthRouter.js'
 import MachineRouter from './router/MachineRouter.js'
-import ModbusRouter from './router/ModbusRouter.js'
 import Maintenance from './router/Maintenance.js'
 import ModbusAppRouter from './router/ModbusAppRouter.js'
 
@@ -16,7 +15,6 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(AuthRouter)
 app.use(MachineRouter)
-app.use(ModbusRouter)
 
 Maintenance(app)
 ModbusAppRouter(app)

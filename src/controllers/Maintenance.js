@@ -1,13 +1,10 @@
 import { Op, Sequelize } from 'sequelize'
 import { MachineIndex } from '../models/MachineModel'
+import { MnCategory } from '../models/MnCategory'
+import { MnAcademy } from '../models/MnAcademy'
+import { MnItem } from '../models/MnItem'
 import { PgMowMtn } from '../models/PgMowMtn'
-import {
-    MnCategory,
-    MnAcademy,
-    MnItem,
-    MnOil,
-    MnUser,
-} from '../models/MaintenanceModel'
+import { MnUser } from '../models/MnUser'
 
 MachineIndex.hasMany(MnAcademy)
 MnAcademy.belongsTo(MachineIndex)

@@ -33,13 +33,13 @@ const sequelize = new Sequelize(
             useUTC: false,
         },
         timezone: '+07:00',
-        dialectOptions: { autoJsonMap: false },
+        // dialectOptions: { autoJsonMap: false },
 
         // logging: (msg) => logger.info(msg),
     }
 )
 
 export default sequelize
-// ;(async () => {
-//     await sequelize.sync()
-// })()
+;(async () => {
+    await sequelize.sync()
+})()
