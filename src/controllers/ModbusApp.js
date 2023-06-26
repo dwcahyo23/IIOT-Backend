@@ -8,8 +8,14 @@ import {
 // MachineIndex.hasMany(MnUser, { foreignKey: 'mch_code' })
 // MnUser.belongsTo(MachineIndex, { foreignKey: 'role', targetKey: 'mch_code' })
 
-ModbusAppModel.hasMany(ModbusAppModelResult, { foreignKey: 'mch_code' })
-ModbusAppModelResult.belongsTo(ModbusAppModel, { foreignKey: 'mch_code' })
+ModbusAppModel.hasMany(ModbusAppModelResult, {
+    foreignKey: 'mch_code',
+    constraints: false,
+})
+ModbusAppModelResult.belongsTo(ModbusAppModel, {
+    foreignKey: 'mch_code',
+    constraints: false,
+})
 
 export default {
     async insCategory(req, res) {

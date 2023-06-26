@@ -5,7 +5,9 @@ import cors from 'cors'
 import AuthRouter from './router/AuthRouter.js'
 import MachineRouter from './router/MachineRouter.js'
 import Maintenance from './router/Maintenance.js'
+
 import ModbusAppRouter from './router/ModbusAppRouter.js'
+import MaintenanceSystemRouter from './router/MaintenanceSystemRouter.js'
 
 dotenv.config()
 
@@ -18,6 +20,7 @@ app.use(MachineRouter)
 
 Maintenance(app)
 ModbusAppRouter(app)
+MaintenanceSystemRouter(app)
 
 app.listen(process.env.PORT_APP, () =>
     console.log(`Server up & running in ${process.env.PORT_APP}`)
