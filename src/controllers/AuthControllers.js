@@ -85,19 +85,19 @@ const DataUser = AuthUser.hasOne(AuthData, { as: 'data' })
 // AuthData.belongsTo(AuthUser);
 
 export const signUp = async (req, res) => {
-    const { displayName, email, password } = req.body
+    const { displayName, userNIK, password } = req.body
     const salt = await bcrypt.genSalt()
     const hashPassword = await bcrypt.hash(password, salt)
     const error = []
     try {
         const isEmailExists = await AuthData.findAll({
-            where: { email },
+            where: { userNIK },
         })
 
         if (isEmailExists.length > 0) {
             error.push({
-                type: 'email',
-                message: 'The email address is already in use',
+                type: 'userNIK',
+                message: 'The userNIK address is already in use',
             })
         }
 
@@ -105,12 +105,12 @@ export const signUp = async (req, res) => {
             const AuthCreate = await AuthUser.create(
                 {
                     password: hashPassword,
-                    role: 'admin',
+                    role: 'staff',
                     data: [
                         {
                             displayName,
                             photoURL: '',
-                            email,
+                            userNIK,
                             settings: {
                                 layout: {},
                                 theme: {},
@@ -151,8 +151,8 @@ export const signUp = async (req, res) => {
 }
 
 export const signIn = async (req, res) => {
-    const { email, password } = req.body.data
-    // const { email, password } = req.body;
+    const { userNIK, password } = req.body.data
+    // const { userNIK, password } = req.body;
     const error = []
     try {
         const AuthFind = await AuthUser.findAll({
@@ -160,13 +160,15 @@ export const signIn = async (req, res) => {
         })
 
         const user = _.cloneDeep(
-            AuthFind.find((_user) => _user.data.email === email)
+            AuthFind.find((_user) => _user.data.userNIK === userNIK)
         )
 
         if (!user) {
             error.push({
-                type: 'email',
-                message: 'Check your email address',
+                type: 'userNIK',
+                message: 'Check your userNIK address',
+                user: AuthFind,
+                body: req.body.data,
             })
         }
 

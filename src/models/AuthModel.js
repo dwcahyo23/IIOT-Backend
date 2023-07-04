@@ -8,7 +8,7 @@ export const AuthUser = sequelize.define(
     '_authUsers',
     {
         uuid: {
-            type: DataTypes.STRING(8),
+            type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
@@ -30,6 +30,11 @@ export const AuthData = sequelize.define(
         },
         photoURL: {
             type: DataTypes.STRING,
+        },
+        userNIK: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+            unique: true,
         },
         email: {
             type: DataTypes.STRING(100),

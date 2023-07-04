@@ -60,27 +60,27 @@ export const MaintenanceCategory = sequelize.define(
     { timestamps: false }
 )
 
-export const MaintenanceCode = sequelize.define(
-    'MaintenanceCode',
-    {
-        uuid: {
-            type: DataTypes.STRING(8),
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-        },
-        title: DataTypes.STRING(10),
-        code: {
-            type: DataTypes.STRING(10),
-            unique: true,
-            allowNull: false,
-        },
-        color: DataTypes.STRING(7),
-    },
-    { timestamps: false }
-)
+// export const MaintenanceCode = sequelize.define(
+//     'MaintenanceCode',
+//     {
+//         uuid: {
+//             type: DataTypes.STRING(8),
+//             defaultValue: DataTypes.UUIDV4,
+//             primaryKey: true,
+//         },
+//         title: DataTypes.STRING(10),
+//         code: {
+//             type: DataTypes.STRING(10),
+//             unique: true,
+//             allowNull: false,
+//         },
+//         color: DataTypes.STRING(7),
+//     },
+//     { timestamps: false }
+// )
 
 export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
-    uuid: {
+    uuid_request: {
         type: DataTypes.STRING(8),
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
@@ -90,9 +90,14 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     mch_com: DataTypes.STRING(8),
     date_request: DataTypes.DATE,
     slug: DataTypes.STRING(10),
-    item_name: DataTypes.STRING(50),
+    user_req1: DataTypes.STRING,
+    user_req2: DataTypes.STRING,
+    item_name: DataTypes.STRING,
+    item_stock: DataTypes.STRING,
     item_qty: DataTypes.INTEGER,
     item_uom: DataTypes.STRING(10),
+    audit_request: DataTypes.STRING(8),
+    date_audit_request: DataTypes.DATE,
 })
 
 export const MaintenanceReport = sequelize.define('MaintenanceReport', {
@@ -104,7 +109,24 @@ export const MaintenanceReport = sequelize.define('MaintenanceReport', {
     mch_com: DataTypes.STRING(8),
     code: DataTypes.STRING(10),
     date_report: DataTypes.DATE,
+    kind: DataTypes.STRING,
     chronological: DataTypes.STRING(),
     corrective: DataTypes.STRING(),
     prevention: DataTypes.STRING(),
+    user_rep1: DataTypes.STRING,
+    user_rep2: DataTypes.STRING,
+    date_target: DataTypes.DATE,
+    date_finish: DataTypes.DATE,
+    audit_report: DataTypes.STRING(8),
+})
+
+export const MaintenanceStock = sequelize.define('MaintenanceStock', {
+    uuid: {
+        type: DataTypes.STRING(8),
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+    },
+    mat_no: DataTypes.STRING,
+    mat_name: DataTypes.STRING,
+    grade: DataTypes.STRING(8),
 })

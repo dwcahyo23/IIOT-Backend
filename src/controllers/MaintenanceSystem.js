@@ -1,15 +1,15 @@
-import { Op, Sequelize, json } from 'sequelize'
+import { Op, Sequelize, json, where } from 'sequelize'
 import {
     MaintenanceMachine,
     MaintenanceCategory,
-    MaintenanceCode,
+    MaintenanceStock,
     MaintenanceRequest,
     MaintenanceReport,
     MaintenanceSparepart,
 } from '../models/MaintenanceSystemModel'
 
 import { PgMowMtn } from '../models/PgMowMtn'
-import { format } from 'date-fns'
+import _, { reject } from 'lodash'
 
 MaintenanceMachine.hasMany(MaintenanceSparepart, {
     foreignKey: 'mch_code',
@@ -84,6 +84,20 @@ export default {
         }
     },
 
+    async insMaintenanceStock(req, res) {
+        const data = req.body
+        try {
+            const response = await MaintenanceStock.bulkCreate(
+                data,
+                { validate: true },
+                { fields: ['mat_no', 'mat_name', 'grade'] }
+            )
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async insMaintenanceCategory(req, res) {
         const category = req.body
         try {
@@ -98,38 +112,36 @@ export default {
         }
     },
 
-    async insMaintenanceCode(req, res) {
-        const code = req.body
-        const response = await MaintenanceCode.bulkCreate(
-            code,
-            { validate: true },
-            { fields: ['title', 'code', 'color'] }
-        )
-        return res.status(200).json(response)
-    },
-
     async insMaintenanceReport(req, res) {
         try {
             const data = req.body
-            const response = await MaintenanceReport.create(
-                {
-                    sheet_no: req.body.id_report,
-                    ...data,
-                },
-                { validate: true },
-                {
-                    fields: [
-                        'mch_code',
-                        'mch_com',
-                        'code',
-                        'chronological',
-                        'corrective',
-                        'prevention',
-                    ],
+            await MaintenanceReport.findOne({
+                where: { sheet_no: req.body.id_report },
+            }).then((obj) => {
+                if (obj) {
+                    MaintenanceReport.update(data, {
+                        where: { sheet_no: req.body.id_report },
+                    })
+                    return res.status(200).json(data)
                 }
-            )
-
-            return res.status(200).json(data)
+                MaintenanceReport.create(
+                    {
+                        sheet_no: req.body.id_report,
+                        ...data,
+                    },
+                    { validate: true },
+                    {
+                        fields: [
+                            'mch_code',
+                            'mch_com',
+                            'chronological',
+                            'corrective',
+                            'prevention',
+                        ],
+                    }
+                )
+                return res.status(200).json(data)
+            })
         } catch (error) {
             console.log(error.message)
         }
@@ -138,23 +150,32 @@ export default {
     async insMaintenanceRequest(req, res) {
         try {
             const data = req.body
-            const response = await MaintenanceRequest.create(
-                { sheet_no: req.body.id_request, ...data },
-                { validate: true },
-                {
-                    fields: [
-                        'mch_code',
-                        'mch_com',
-                        'code',
-                        'date_request',
-                        'item_name',
-                        'item_qty',
-                        'item_uom',
-                    ],
-                }
-            )
+            if (!data.uuid_request) {
+                await MaintenanceRequest.create(
+                    { sheet_no: req.body.id_request, ...data },
+                    { validate: true },
+                    {
+                        fields: [
+                            'mch_code',
+                            'mch_com',
+                            'date_request',
+                            'item_stock',
+                            'item_name',
+                            'item_qty',
+                            'item_uom',
+                        ],
+                    }
+                )
 
-            return res.status(200).json(response)
+                return res.status(200).json(data)
+            }
+
+            if (data.uuid_request) {
+                MaintenanceRequest.update(data, {
+                    where: { uuid_request: data.uuid_request },
+                })
+                return res.status(200).json(data)
+            }
         } catch (error) {
             console.log(error.message)
         }
@@ -210,13 +231,13 @@ export default {
             const pGMaintenance = await PgMowMtn.findAll({
                 where: {
                     mch_no: getId.mch_code,
-                    [Op.and]: [
-                        Sequelize.where(
-                            Sequelize.fn('date', Sequelize.col('ymd')),
-                            '>=',
-                            '2023-01-01'
-                        ),
-                    ],
+                    // [Op.and]: [
+                    //     Sequelize.where(
+                    //         Sequelize.fn('date', Sequelize.col('ymd')),
+                    //         '>=',
+                    //         '2023-01-01'
+                    //     ),
+                    // ],
                 },
                 order: [['sheet_no', 'DESC']],
             })
@@ -301,6 +322,17 @@ export default {
         }
     },
 
+    async getMaintenanceStock(req, res) {
+        try {
+            const response = await MaintenanceStock.findAll({
+                order: [['mat_name', 'ASC']],
+            })
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async getMaintenanceMachineProcess(req, res) {
         try {
             const response = await MaintenanceMachine.findAll({
@@ -316,15 +348,15 @@ export default {
     async pGMaintenance(req, res) {
         try {
             const response = await PgMowMtn.findAll({
-                where: {
-                    [Op.and]: [
-                        Sequelize.where(
-                            Sequelize.fn('date', Sequelize.col('ymd')),
-                            '>=',
-                            '2023-01-01'
-                        ),
-                    ],
-                },
+                // where: {
+                //     [Op.and]: [
+                //         Sequelize.where(
+                //             Sequelize.fn('date', Sequelize.col('ymd')),
+                //             '>=',
+                //             '2023-01-01'
+                //         ),
+                //     ],
+                // },
             })
             res.status(200).json(response)
         } catch (error) {

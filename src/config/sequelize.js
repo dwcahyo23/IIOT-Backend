@@ -34,7 +34,7 @@ const sequelize = new Sequelize(
         },
         timezone: '+07:00',
         // dialectOptions: { autoJsonMap: false },
-
+        // logging: (...msg) => console.log(msg),
         // logging: (msg) => logger.info(msg),
     }
 )

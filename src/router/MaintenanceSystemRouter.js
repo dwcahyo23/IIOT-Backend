@@ -18,6 +18,8 @@ export default (app) => {
         MaintenanceSystem.getMaintenanceMachineProcess
     )
     app.get('/pgMaintenance', MaintenanceSystem.pGMaintenance)
+    app.get('/maintenanceStock', MaintenanceSystem.getMaintenanceStock)
+    app.post('/maintenanceStock', MaintenanceSystem.insMaintenanceStock)
     app.post('/maintenanceMachine', MaintenanceSystem.insMaintenanceMachine)
     app.post('/maintenanceSparepart', MaintenanceSystem.insMaintenanceSparepart)
     app.post('/maintenanceReport', MaintenanceSystem.insMaintenanceReport)
