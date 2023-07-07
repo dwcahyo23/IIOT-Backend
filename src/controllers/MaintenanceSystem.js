@@ -8,8 +8,10 @@ import {
     MaintenanceSparepart,
 } from '../models/MaintenanceSystemModel'
 
+import { GenbaAcip } from '../models/GenbaModel'
+
 import { PgMowMtn } from '../models/PgMowMtn'
-import _, { reject } from 'lodash'
+import _ from 'lodash'
 
 MaintenanceMachine.hasMany(MaintenanceSparepart, {
     foreignKey: 'mch_code',
@@ -59,26 +61,104 @@ export default {
         }
     },
 
+    async insMaintenanceSparepartBulkFind(req, res) {
+        try {
+            const sparepart = req.body
+            console.log(sparepart.length)
+            _.forEach(sparepart, async (val, index) => {
+                const boms = await MaintenanceSparepart.findAll({
+                    where: {
+                        mch_code: val.mch_code,
+                        category: val.category,
+                    },
+                })
+
+                if (boms.length < 1) {
+                    const bom = `${val.category}${val.mch_code.replace(
+                        /\-/g,
+                        ''
+                    )}-${1001 + boms.length}`
+                    const response = await MaintenanceSparepart.create({
+                        ...val,
+                        bom: bom,
+                    })
+                    return res.end()
+                } else {
+                    const bom = `${val.category}${val.mch_code.replace(
+                        /\-/g,
+                        ''
+                    )}-${1001 + boms.length}`
+                    const response = await MaintenanceSparepart.create({
+                        ...val,
+                        bom: bom,
+                    })
+
+                    return res.end()
+                }
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async insMaintenanceSparepart(req, res) {
         try {
             const sparepart = req.body
-            const response = await MaintenanceSparepart.bulkCreate(
-                sparepart,
-                { validate: true },
-                {
-                    fields: [
-                        'mch_code',
-                        'mch_com',
-                        'slug',
-                        'bom',
-                        'category',
-                        'item_name',
-                        'item_life_time',
-                        'item_lead_time',
-                    ],
-                }
-            )
-            return res.status(200).json(response)
+            console.log(sparepart.length)
+            const boms = await MaintenanceSparepart.findAll({
+                where: {
+                    mch_code: sparepart.mch_code,
+                    category: sparepart.category,
+                },
+            })
+
+            if (boms.length < 1) {
+                const bom = `${
+                    sparepart.category
+                }${sparepart.mch_code.value.replace(/\-/g, '')}-${
+                    1001 + boms.length
+                }`
+                const response = await MaintenanceSparepart.bulkCreate(
+                    { ...sparepart, bom: bom },
+                    { validate: true },
+                    {
+                        fields: [
+                            'mch_code',
+                            'mch_com',
+                            'slug',
+                            'bom',
+                            'category',
+                            'item_name',
+                            'item_life_time',
+                            'item_lead_time',
+                        ],
+                    }
+                )
+                return res.status(200).json(response)
+            } else {
+                const bom = `${
+                    sparepart.category
+                }${sparepart.mch_code.value.replace(/\-/g, '')}-${
+                    1001 + boms.length
+                }`
+                const response = await MaintenanceSparepart.bulkCreate(
+                    { ...sparepart, bom: bom },
+                    { validate: true },
+                    {
+                        fields: [
+                            'mch_code',
+                            'mch_com',
+                            'slug',
+                            'bom',
+                            'category',
+                            'item_name',
+                            'item_life_time',
+                            'item_lead_time',
+                        ],
+                    }
+                )
+                return res.status(200).json(response)
+            }
         } catch (error) {
             console.log(error.message)
         }
@@ -258,43 +338,60 @@ export default {
                 order: [['sheet_no', 'DESC']],
             })
 
-            const response = await MaintenanceMachine.findOne({
-                where: { mch_prod: 'Y', uuid: req.params.uuid },
-                include: [
-                    {
-                        model: MaintenanceSparepart,
-                        where: {
-                            mch_com: { [Op.col]: 'MaintenanceMachine.mch_com' },
-                        },
-                        include: [{ model: MaintenanceCategory }],
-                        order: [[MaintenanceSparepart, 'item_name', 'ASC']],
-                        attributes: {
-                            exclude: [
-                                'mch_code',
-                                'mch_com',
-                                'createdAt',
-                                'updatedAt',
-                            ],
-                        },
-                    },
-                ],
-                order: [['mch_code', 'ASC']],
+            const genba = await GenbaAcip.findAll({
+                where: { mch_code: getId.mch_code },
             })
 
-            if (!response || !request || !report) {
+            const sparepart = await MaintenanceSparepart.findAll({
+                where: {
+                    mch_code: getId.mch_code,
+                    mch_com: getId.mch_com,
+                },
+                order: [['createdAt', 'DESC']],
+            })
+
+            // const response = await MaintenanceMachine.findOne({
+            //     where: { mch_prod: 'Y', uuid: req.params.uuid },
+            //     include: [
+            //         {
+            //             model: MaintenanceSparepart,
+            //             where: {
+            //                 mch_com: { [Op.col]: 'MaintenanceMachine.mch_com' },
+            //             },
+            //             include: [{ model: MaintenanceCategory }],
+            //             order: [[MaintenanceSparepart, 'item_name', 'ASC']],
+            //             attributes: {
+            //                 exclude: [
+            //                     'mch_code',
+            //                     'mch_com',
+            //                     'createdAt',
+            //                     'updatedAt',
+            //                 ],
+            //             },
+            //         },
+            //     ],
+            //     order: [['mch_code', 'ASC']],
+            // })
+
+            if (!sparepart || !request || !report || !genba) {
                 return res.status(200).json({
                     ...getId.dataValues,
-                    MaintenanceSpareparts: [],
+                    // MaintenanceSpareparts: [],
+                    sparepart: sparepart,
                     mow: pGMaintenance,
                     report: report,
                     request: request,
+                    genba: genba,
                 })
             }
             return res.status(200).json({
-                ...response.dataValues,
+                // ...response.dataValues,
+                ...getId.dataValues,
                 mow: pGMaintenance,
                 report: report,
                 request: request,
+                genba: genba,
+                sparepart: sparepart,
             })
         } catch (error) {
             console.log(error.message)
@@ -348,15 +445,16 @@ export default {
     async pGMaintenance(req, res) {
         try {
             const response = await PgMowMtn.findAll({
-                // where: {
-                //     [Op.and]: [
-                //         Sequelize.where(
-                //             Sequelize.fn('date', Sequelize.col('ymd')),
-                //             '>=',
-                //             '2023-01-01'
-                //         ),
-                //     ],
-                // },
+                where: {
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('date', Sequelize.col('ymd')),
+                            '>=',
+                            '2023-01-01'
+                        ),
+                    ],
+                },
+                order: [['s_ymd', 'ASC']],
             })
             res.status(200).json(response)
         } catch (error) {

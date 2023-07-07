@@ -39,6 +39,17 @@ export const MaintenanceSparepart = sequelize.define('MaintenanceSparepart', {
     item_name: DataTypes.STRING(50),
     item_life_time: DataTypes.INTEGER,
     item_lead_time: DataTypes.INTEGER,
+    item_change_date: {
+        type: DataTypes.JSON,
+        get: function () {
+            if (typeof this.getDataValue('item_change_date') == 'string') {
+                return JSON.parse(this.getDataValue('item_change_date'))
+            } else {
+                return this.getDataValue('item_change_date')
+            }
+            // console.log(typeof this.getDataValue('data_result'))
+        },
+    },
 })
 
 export const MaintenanceCategory = sequelize.define(
