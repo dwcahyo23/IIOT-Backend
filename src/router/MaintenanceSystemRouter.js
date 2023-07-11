@@ -2,11 +2,7 @@ import MaintenanceSystem from '../controllers/MaintenanceSystem.js'
 import { verifyToken } from '../middleware/verifyToken.js'
 
 export default (app) => {
-    app.get(
-        '/maintenanceSystem',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceSystem
-    )
+    app.get('/maintenanceSystem', MaintenanceSystem.getMaintenanceSystem)
     app.get(
         '/maintenanceMachine/:uuid',
         verifyToken,
@@ -43,11 +39,7 @@ export default (app) => {
         verifyToken,
         MaintenanceSystem.insMaintenanceStock
     )
-    app.post(
-        '/maintenanceMachine',
-        verifyToken,
-        MaintenanceSystem.insMaintenanceMachine
-    )
+    app.post('/maintenanceMachine', MaintenanceSystem.insMaintenanceMachine)
 
     app.post(
         '/maintenanceSparepartBulk',

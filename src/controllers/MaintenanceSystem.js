@@ -263,29 +263,39 @@ export default {
 
     async getMaintenanceSystem(req, res) {
         try {
-            const response = await MaintenanceMachine.findAll({
-                where: { mch_prod: 'Y' },
-                include: [
-                    {
-                        model: MaintenanceSparepart,
-                        where: {
-                            mch_com: { [Op.col]: 'MaintenanceMachine.mch_com' },
-                        },
-                        include: [{ model: MaintenanceCategory }],
-                        order: [[MaintenanceSparepart, 'item_name', 'ASC']],
-                        attributes: {
-                            exclude: [
-                                'mch_code',
-                                'mch_com',
-                                'createdAt',
-                                'updatedAt',
-                            ],
-                        },
-                    },
-                ],
+            const mch = await MaintenanceMachine.findAll({
                 order: [['mch_code', 'ASC']],
             })
-            return res.status(200).json(response)
+
+            const pg = await PgMowMtn.findAll({
+                where: {
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('date', Sequelize.col('ymd')),
+                            '>=',
+                            '2023-01-01'
+                        ),
+                    ],
+                },
+                attributes: ['sheet_no', 'mch_no', 'pri_no', 'chk_mark'],
+                group: ['sheet_no', 'mch_no', 'pri_no', 'chk_mark'],
+                order: [['sheet_no', 'DESC']],
+            })
+
+            const sp = await MaintenanceSparepart.findAll({})
+
+            const machine = _.map(mch, (val) => {
+                return {
+                    ...val.dataValues,
+                    sheet: _.find(pg, { mch_no: val.mch_code }),
+                    sp: _.filter(sp, {
+                        mch_code: val.mch_code,
+                        mch_com: val.mch_com,
+                    }),
+                }
+            })
+
+            return res.status(200).json(machine)
         } catch (error) {
             console.log(error.message)
         }
@@ -456,7 +466,18 @@ export default {
                 },
                 order: [['s_ymd', 'ASC']],
             })
-            res.status(200).json(response)
+
+            const mch = await MaintenanceMachine.findAll({})
+
+            const result = _.map(response, (val) => {
+                return {
+                    ...val.dataValues,
+                    mch_index: _.find(mch, { mch_code: val.mch_no }),
+                }
+                // return _.merge(val, _.find(mch, { mch_code: val.mch_no }))
+            })
+
+            res.status(200).json(result)
         } catch (error) {
             console.log(error)
         }
