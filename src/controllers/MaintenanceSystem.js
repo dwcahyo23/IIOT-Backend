@@ -443,8 +443,9 @@ export default {
     async getMaintenanceMachineProcess(req, res) {
         try {
             const response = await MaintenanceMachine.findAll({
-                attributes: ['uuid', 'mch_process_type'],
-                group: 'mch_process_type',
+                attributes: ['uuid', 'mch_process'],
+                group: 'mch_process',
+                order: [['mch_process', 'ASC']],
             })
             return res.status(200).json(response)
         } catch (error) {
@@ -469,12 +470,18 @@ export default {
 
             const mch = await MaintenanceMachine.findAll({})
 
+            const req = await MaintenanceRequest.findAll({
+                where: { audit_request: 'N' },
+            })
+
             const result = _.map(response, (val) => {
                 return {
                     ...val.dataValues,
-                    mch_index: _.find(mch, { mch_code: val.mch_no }),
+                    mch_index: _.find(mch, {
+                        mch_code: val.mch_no,
+                    }),
+                    request: _.filter(req, { sheet_no: val.sheet_no }),
                 }
-                // return _.merge(val, _.find(mch, { mch_code: val.mch_no }))
             })
 
             res.status(200).json(result)
