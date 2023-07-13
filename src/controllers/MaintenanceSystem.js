@@ -246,16 +246,15 @@ export default {
                     MaintenanceReport.update(data, {
                         where: { sheet_no: data.id_report },
                     })
-                    if (data.audit_report == 'Y') {
-                        PgMowMtn.update(
-                            { chk_mark: 'Y' },
-                            {
-                                where: {
-                                    sheet_no: data.id_report,
-                                },
-                            }
-                        )
-                    }
+
+                    PgMowMtn.update(
+                        { chk_mark: data.audit_report },
+                        {
+                            where: {
+                                sheet_no: data.id_report,
+                            },
+                        }
+                    )
                     return res.status(200).json(data)
                 }
                 MaintenanceReport.create(
@@ -274,16 +273,14 @@ export default {
                         ],
                     }
                 )
-                if (data.audit_report == 'Y') {
-                    PgMowMtn.update(
-                        { chk_mark: 'Y' },
-                        {
-                            where: {
-                                sheet_no: data.id_report,
-                            },
-                        }
-                    )
-                }
+                PgMowMtn.update(
+                    { chk_mark: data.audit_report },
+                    {
+                        where: {
+                            sheet_no: data.id_report,
+                        },
+                    }
+                )
                 return res.status(200).json(data)
             })
         } catch (error) {
