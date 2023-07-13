@@ -112,6 +112,7 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     item_uom: DataTypes.STRING(10),
     audit_request: DataTypes.STRING(8),
     date_audit_request: DataTypes.DATE,
+    mre_request: DataTypes.STRING,
 })
 
 export const MaintenanceReport = sequelize.define('MaintenanceReport', {
