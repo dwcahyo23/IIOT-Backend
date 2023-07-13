@@ -8,6 +8,8 @@ import {
     MaintenanceSparepart,
 } from '../models/MaintenanceSystemModel'
 
+import { AuthData } from '../models/AuthModel'
+
 import { GenbaAcip } from '../models/GenbaModel'
 
 import { PgMowMtn } from '../models/PgMowMtn'
@@ -58,6 +60,48 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error.message)
+        }
+    },
+
+    async instMaintenanceBulkReport(req, res) {
+        const machine = req.body
+        try {
+            const response = await MaintenanceReport.bulkCreate(
+                machine,
+                { validate: true },
+                {
+                    fields: [
+                        'sheet_no',
+                        'mch_code',
+                        'mch_com',
+                        'date_report',
+                        'kind',
+                        'chronological',
+                        'corrective',
+                        'prevention',
+                        'user_rep1',
+                        'user_rep2',
+                        'date_target',
+                        'date_finish',
+                        'audit_report',
+                    ],
+                }
+            )
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    async instMaintenanceBulkRequest(req, res) {
+        const machine = req.body
+        try {
+            const response = await MaintenanceRequest.bulkCreate(machine, {
+                validate: true,
+            })
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
         }
     },
 
@@ -298,6 +342,15 @@ export default {
             return res.status(200).json(machine)
         } catch (error) {
             console.log(error.message)
+        }
+    },
+
+    async getUser(req, res) {
+        try {
+            const response = await AuthData.findAll({})
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
         }
     },
 

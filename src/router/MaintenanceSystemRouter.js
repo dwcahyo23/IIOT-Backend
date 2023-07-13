@@ -3,6 +3,7 @@ import { verifyToken } from '../middleware/verifyToken.js'
 
 export default (app) => {
     app.get('/maintenanceSystem', MaintenanceSystem.getMaintenanceSystem)
+    app.get('/userData', MaintenanceSystem.getUser)
     app.get(
         '/maintenanceMachine/:uuid',
         verifyToken,
@@ -64,5 +65,11 @@ export default (app) => {
         '/maintenanceCategory',
         verifyToken,
         MaintenanceSystem.insMaintenanceCategory
+    )
+
+    app.post('/maintenanceReportB', MaintenanceSystem.instMaintenanceBulkReport)
+    app.post(
+        '/maintenanceRequestB',
+        MaintenanceSystem.instMaintenanceBulkRequest
     )
 }
