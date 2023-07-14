@@ -430,48 +430,27 @@ export default {
                 order: [['createdAt', 'DESC']],
             })
 
-            // const response = await MaintenanceMachine.findOne({
-            //     where: { mch_prod: 'Y', uuid: req.params.uuid },
-            //     include: [
-            //         {
-            //             model: MaintenanceSparepart,
-            //             where: {
-            //                 mch_com: { [Op.col]: 'MaintenanceMachine.mch_com' },
-            //             },
-            //             include: [{ model: MaintenanceCategory }],
-            //             order: [[MaintenanceSparepart, 'item_name', 'ASC']],
-            //             attributes: {
-            //                 exclude: [
-            //                     'mch_code',
-            //                     'mch_com',
-            //                     'createdAt',
-            //                     'updatedAt',
-            //                 ],
-            //             },
-            //         },
-            //     ],
-            //     order: [['mch_code', 'ASC']],
-            // })
+            const user = await AuthData.findAll({})
 
-            if (!sparepart || !request || !report || !genba) {
+            if (!sparepart || !request || !report || !genba || !user) {
                 return res.status(200).json({
                     ...getId.dataValues,
-                    // MaintenanceSpareparts: [],
                     sparepart: sparepart,
                     mow: pGMaintenance,
                     report: report,
                     request: request,
                     genba: genba,
+                    user: user,
                 })
             }
             return res.status(200).json({
-                // ...response.dataValues,
                 ...getId.dataValues,
                 mow: pGMaintenance,
                 report: report,
                 request: request,
                 genba: genba,
                 sparepart: sparepart,
+                user: user,
             })
         } catch (error) {
             console.log(error.message)

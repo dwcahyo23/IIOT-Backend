@@ -36,6 +36,7 @@ export const AuthData = sequelize.define(
             allowNull: false,
             unique: true,
         },
+        userNumber: DataTypes.STRING(100),
         email: {
             type: DataTypes.STRING(100),
         },

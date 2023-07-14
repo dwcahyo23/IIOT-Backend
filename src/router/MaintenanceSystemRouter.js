@@ -6,7 +6,6 @@ export default (app) => {
     app.get('/userData', MaintenanceSystem.getUser)
     app.get(
         '/maintenanceMachine/:uuid',
-        verifyToken,
         MaintenanceSystem.getMaintenanceMachineBy
     )
     app.get(
