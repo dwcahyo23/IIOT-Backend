@@ -292,29 +292,63 @@ export default {
         try {
             const data = req.body
             if (!data.uuid_request) {
-                await MaintenanceRequest.create(
-                    { sheet_no: req.body.id_request, ...data },
-                    { validate: true },
-                    {
-                        fields: [
-                            'mch_code',
-                            'mch_com',
-                            'date_request',
-                            'item_stock',
-                            'item_name',
-                            'item_qty',
-                            'item_uom',
-                        ],
-                    }
-                )
-
+                !data.new_sparepart
+                    ? await MaintenanceRequest.create(
+                          { sheet_no: req.body.id_request, ...data },
+                          { validate: true },
+                          {
+                              fields: [
+                                  'mch_code',
+                                  'mch_com',
+                                  'date_request',
+                                  'item_stock',
+                                  'item_name',
+                                  'item_qty',
+                                  'item_uom',
+                              ],
+                          }
+                      )
+                    : await MaintenanceRequest.create(
+                          {
+                              sheet_no: req.body.id_request,
+                              ...data,
+                              item_stock: data.new_sparepart,
+                          },
+                          { validate: true },
+                          {
+                              fields: [
+                                  'mch_code',
+                                  'mch_com',
+                                  'date_request',
+                                  'item_name',
+                                  'item_qty',
+                                  'item_uom',
+                              ],
+                          }
+                      ).then(() => {
+                          MaintenanceStock.create({
+                              mat_name: data.new_sparepart,
+                          })
+                      })
                 return res.status(200).json(data)
             }
 
             if (data.uuid_request) {
-                MaintenanceRequest.update(data, {
-                    where: { uuid_request: data.uuid_request },
-                })
+                !data.new_sparepart
+                    ? await MaintenanceRequest.update(data, {
+                          where: { uuid_request: data.uuid_request },
+                      })
+                    : await MaintenanceRequest.update(
+                          { ...data, item_stock: data.new_sparepart },
+                          {
+                              where: { uuid_request: data.uuid_request },
+                          }
+                      ).then(() => {
+                          MaintenanceStock.create({
+                              mat_name: data.new_sparepart,
+                          })
+                      })
+
                 return res.status(200).json(data)
             }
         } catch (error) {
@@ -482,6 +516,17 @@ export default {
         try {
             const response = await MaintenanceStock.findAll({
                 order: [['mat_name', 'ASC']],
+            })
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
+    async getMaintenanceRequest(req, res) {
+        try {
+            const response = await MaintenanceRequest.findAll({
+                order: [['sheet_no', 'DESC']],
             })
             return res.status(200).json(response)
         } catch (error) {

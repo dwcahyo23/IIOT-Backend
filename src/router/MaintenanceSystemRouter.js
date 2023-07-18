@@ -28,6 +28,8 @@ export default (app) => {
         verifyToken,
         MaintenanceSystem.getMaintenanceMachineProcess
     )
+
+    app.get('/maintenanceRequest', MaintenanceSystem.getMaintenanceRequest)
     app.get('/pgMaintenance', MaintenanceSystem.pGMaintenance)
     app.get(
         '/maintenanceStock',
