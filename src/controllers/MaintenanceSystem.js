@@ -525,10 +525,21 @@ export default {
 
     async getMaintenanceRequest(req, res) {
         try {
-            const response = await MaintenanceRequest.findAll({
+            const req = await MaintenanceRequest.findAll({
                 order: [['sheet_no', 'DESC']],
             })
-            return res.status(200).json(response)
+            const mch = await MaintenanceMachine.findAll({})
+
+            const result = _.map(req, (val) => {
+                return {
+                    ...val.dataValues,
+                    mch_index: _.find(mch, {
+                        mch_code: val.mch_code,
+                    }),
+                }
+            })
+
+            return res.status(200).json(result)
         } catch (error) {
             console.log(error.message)
         }
