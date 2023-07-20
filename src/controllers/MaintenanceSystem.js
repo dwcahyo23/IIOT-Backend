@@ -380,9 +380,12 @@ export default {
             const sp = await MaintenanceSparepart.findAll({})
 
             const machine = _.map(mch, (val) => {
+                console.log(val.mch_com)
                 return {
                     ...val.dataValues,
-                    sheet: _.find(pg, { mch_no: val.mch_code }),
+                    sheet: _.find(pg, {
+                        mch_no: val.mch_code,
+                    }),
                     sp: _.filter(sp, {
                         mch_code: val.mch_code,
                         mch_com: val.mch_com,
