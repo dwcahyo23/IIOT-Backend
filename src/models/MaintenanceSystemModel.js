@@ -117,6 +117,7 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     mre_request: DataTypes.STRING,
     sts_wa1: DataTypes.STRING,
     sts_wa2: DataTypes.STRING,
+    sts_wa3: DataTypes.STRING,
 })
 
 export const MaintenanceReport = sequelize.define('MaintenanceReport', {
