@@ -133,6 +133,7 @@ export const MaintenanceReport = sequelize.define('MaintenanceReport', {
     chronological: DataTypes.TEXT,
     corrective: DataTypes.TEXT,
     prevention: DataTypes.TEXT,
+    analyzed: DataTypes.TEXT,
     user_rep1: DataTypes.STRING,
     user_rep2: DataTypes.STRING,
     date_target: DataTypes.DATE,
