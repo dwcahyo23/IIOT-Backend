@@ -574,14 +574,14 @@ export default {
                         ),
                     ],
                 },
-                order: [['s_ymd', 'ASC']],
+                order: [['s_ymd', 'DESC']],
             })
 
             const mch = await MaintenanceMachine.findAll({})
 
-            const req = await MaintenanceRequest.findAll({
-                where: { audit_request: 'N' },
-            })
+            // const req = await MaintenanceRequest.findAll({
+            //     where: { audit_request: 'N' },
+            // })
 
             const result = _.map(response, (val) => {
                 return {
@@ -597,7 +597,7 @@ export default {
                                 ? 'GM3'
                                 : 'GM5',
                     }),
-                    request: _.filter(req, { sheet_no: val.sheet_no }),
+                    // request: _.filter(req, { sheet_no: val.sheet_no }),
                 }
             })
 
