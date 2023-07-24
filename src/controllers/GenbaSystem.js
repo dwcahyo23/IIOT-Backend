@@ -24,4 +24,12 @@ export default {
             return res.status(404).send(error.message)
         }
     },
+
+    async getGenbaAcip(req, res) {
+        await GenbaAcip.findAll({})
+            .then((data) => {
+                return res.status(200).json(data)
+            })
+            .catch((error) => console.log(error.message))
+    },
 }

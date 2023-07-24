@@ -18,6 +18,9 @@ export const AuthUser = sequelize.define(
         role: {
             type: DataTypes.STRING(20),
         },
+        loginRedirectUrl: {
+            type: DataTypes.STRING(30),
+        },
     },
     { timestamps: false }
 )
