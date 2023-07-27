@@ -247,15 +247,16 @@ export default {
                         where: { sheet_no: data.id_report },
                     })
 
-                    PgMowMtn.update(
-                        { chk_mark: data.audit_report },
-                        {
-                            where: {
-                                sheet_no: data.id_report,
-                            },
-                        }
-                    )
-                    return res.status(200).json(data)
+                    //! for update chk mark Y in pG
+                    // PgMowMtn.update(
+                    //     { chk_mark: data.audit_report },
+                    //     {
+                    //         where: {
+                    //             sheet_no: data.id_report,
+                    //         },
+                    //     }
+                    // )
+                    // return res.status(200).json(data)
                 }
                 MaintenanceReport.create(
                     {
@@ -273,14 +274,15 @@ export default {
                         ],
                     }
                 )
-                PgMowMtn.update(
-                    { chk_mark: data.audit_report },
-                    {
-                        where: {
-                            sheet_no: data.id_report,
-                        },
-                    }
-                )
+                //! for update chk mark Y in pG
+                // PgMowMtn.update(
+                //     { chk_mark: data.audit_report },
+                //     {
+                //         where: {
+                //             sheet_no: data.id_report,
+                //         },
+                //     }
+                // )
                 return res.status(200).json(data)
             })
         } catch (error) {
@@ -414,6 +416,45 @@ export default {
                 order: [['mch_code', 'ASC']],
             })
             return res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
+    async getMaintenanceMachineByOne(req, res) {
+        try {
+            const getId = await MaintenanceMachine.findOne({
+                where: { uuid: req.params.uuid },
+            })
+
+            const report = await MaintenanceReport.findAll({
+                where: {
+                    mch_code: getId.mch_code,
+                    mch_com: getId.mch_com,
+                },
+                order: [['sheet_no', 'DESC']],
+            })
+
+            const request = await MaintenanceRequest.findAll({
+                where: {
+                    mch_code: getId.mch_code,
+                    mch_com: getId.mch_com,
+                },
+                order: [['sheet_no', 'DESC']],
+            })
+
+            if (!request || !report) {
+                return res.status(200).json({
+                    ...getId.dataValues,
+                    report: report,
+                    request: request,
+                })
+            }
+            return res.status(200).json({
+                ...getId.dataValues,
+                report: report,
+                request: request,
+            })
         } catch (error) {
             console.log(error.message)
         }

@@ -25,10 +25,27 @@ export default {
         }
     },
 
+    async saveGenbaAcip(req, res) {
+        const data = req.body
+        try {
+            await GenbaAcip.findOne({
+                where: { id: data.id },
+            }).then((obj) => {
+                if (obj) {
+                    GenbaAcip.update(data, { where: { id: data.id } })
+                    return res.status(200).send(`data was successfully updated`)
+                }
+                return res.status(200).send(`data was successfully updated`)
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async getGenbaAcip(req, res) {
         await GenbaAcip.findAll({})
             .then((data) => {
-                return res.status(200).json(data)
+                return res.status(200).json({ payload: 'success', data: data })
             })
             .catch((error) => console.log(error.message))
     },

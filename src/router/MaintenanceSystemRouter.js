@@ -9,6 +9,10 @@ export default (app) => {
         MaintenanceSystem.getMaintenanceMachineBy
     )
     app.get(
+        '/maintenanceMachineOne/:uuid',
+        MaintenanceSystem.getMaintenanceMachineByOne
+    )
+    app.get(
         '/maintenanceMachine',
         verifyToken,
         MaintenanceSystem.getMaintenanceMachine
