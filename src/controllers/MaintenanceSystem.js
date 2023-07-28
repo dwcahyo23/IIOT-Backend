@@ -616,8 +616,8 @@ export default {
     async getMaintenanceMachineProcess(req, res) {
         try {
             const response = await MaintenanceMachine.findAll({
-                attributes: ['uuid', 'mch_process'],
-                group: 'mch_process',
+                attributes: ['uuid', 'mch_process', 'mch_com'],
+                group: ['mch_process', 'mch_com'],
                 order: [['mch_process', 'ASC']],
             })
             return res.status(200).json(response)
