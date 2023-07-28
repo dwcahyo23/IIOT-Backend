@@ -590,6 +590,29 @@ export default {
         }
     },
 
+    async getMaintenanceReport(req, res) {
+        try {
+            const req = await MaintenanceReport.findAll({
+                order: [['sheet_no', 'DESC']],
+            })
+            const mch = await MaintenanceMachine.findAll({})
+
+            const result = _.map(req, (val) => {
+                return {
+                    ...val.dataValues,
+                    mch_index: _.find(mch, {
+                        mch_code: val.mch_code,
+                        mch_com: val.mch_com,
+                    }),
+                }
+            })
+
+            return res.status(200).json(result)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async getMaintenanceMachineProcess(req, res) {
         try {
             const response = await MaintenanceMachine.findAll({

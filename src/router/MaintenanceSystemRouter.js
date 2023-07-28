@@ -34,6 +34,7 @@ export default (app) => {
     )
 
     app.get('/maintenanceRequest', MaintenanceSystem.getMaintenanceRequest)
+    app.get('/maintenanceReport', MaintenanceSystem.getMaintenanceReport)
     app.get('/pgMaintenance', MaintenanceSystem.pGMaintenance)
     app.get(
         '/maintenanceStock',
