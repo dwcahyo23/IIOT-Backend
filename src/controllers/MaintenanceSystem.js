@@ -6,6 +6,7 @@ import {
     MaintenanceRequest,
     MaintenanceReport,
     MaintenanceSparepart,
+    MaintenanceSparepartControlStcok,
 } from '../models/MaintenanceSystemModel'
 
 import { AuthData } from '../models/AuthModel'
@@ -14,6 +15,7 @@ import { GenbaAcip } from '../models/GenbaModel'
 
 import { PgMowMtn } from '../models/PgMowMtn'
 import _ from 'lodash'
+import { error } from 'winston'
 
 MaintenanceMachine.hasMany(MaintenanceSparepart, {
     foreignKey: 'mch_code',
@@ -38,6 +40,8 @@ MaintenanceSparepart.belongsTo(MaintenanceCategory, {
 })
 
 export default {
+    //--- for dev bulk post  ---
+
     async insMaintenanceMachine(req, res) {
         const machine = req.body
         try {
@@ -144,6 +148,23 @@ export default {
             console.log(error.message)
         }
     },
+
+    async instMaintenanceBulkControllStock(req, res) {
+        const data = req.body
+        try {
+            const response = await MaintenanceSparepartControlStcok.bulkCreate(
+                data,
+                {
+                    validate: true,
+                }
+            )
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    //---- end of bulk post ---
 
     async insMaintenanceSparepart(req, res) {
         try {
@@ -358,6 +379,37 @@ export default {
         }
     },
 
+    async instMaintenanceControlStock(req, res) {
+        try {
+            const data = req.body
+            const respone = await MaintenanceSparepartControlStcok.findAll({
+                where: { uuid: req.body.uuid },
+            })
+
+            if (respone.length < 1) {
+                MaintenanceSparepartControlStcok.create({
+                    ...data,
+                })
+            } else {
+                MaintenanceSparepartControlStcok.update(data, {
+                    where: { uuid: req.body.uuid },
+                })
+            }
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
+    async getMaintenanceControlStock(req, res) {
+        try {
+            const response = await MaintenanceSparepartControlStcok.findAll({})
+            res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async getMaintenanceSystem(req, res) {
         try {
             const mch = await MaintenanceMachine.findAll({
@@ -469,6 +521,8 @@ export default {
             const pGMaintenance = await PgMowMtn.findAll({
                 where: {
                     mch_no: getId.mch_code,
+
+                    chk_mark: { [Op.not]: 'C' },
                     // [Op.and]: [
                     //     Sequelize.where(
                     //         Sequelize.fn('date', Sequelize.col('ymd')),
@@ -630,6 +684,7 @@ export default {
         try {
             const response = await PgMowMtn.findAll({
                 where: {
+                    chk_mark: { [Op.not]: 'C' },
                     [Op.and]: [
                         Sequelize.where(
                             Sequelize.fn('date', Sequelize.col('ymd')),

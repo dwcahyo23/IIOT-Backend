@@ -1,81 +1,32 @@
-import MaintenanceSystem from '../controllers/MaintenanceSystem.js'
+import { default as Mn } from '../controllers/MaintenanceSystem'
 import { verifyToken } from '../middleware/verifyToken.js'
 
 export default (app) => {
-    app.get('/maintenanceSystem', MaintenanceSystem.getMaintenanceSystem)
-    app.get('/userData', MaintenanceSystem.getUser)
-    app.get(
-        '/maintenanceMachine/:uuid',
-        MaintenanceSystem.getMaintenanceMachineBy
-    )
-    app.get(
-        '/maintenanceMachineOne/:uuid',
-        MaintenanceSystem.getMaintenanceMachineByOne
-    )
-    app.get(
-        '/maintenanceMachine',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceMachine
-    )
-    app.get(
-        '/maintenanceCategory',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceCategory
-    )
-    app.get(
-        '/maintenanceMachineCom',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceMachineCom
-    )
-    app.get(
-        '/maintenanceMachineProcess',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceMachineProcess
-    )
+    app.get('/maintenanceSystem', Mn.getMaintenanceSystem)
+    app.get('/userData', Mn.getUser)
+    app.get('/maintenanceMachine/:uuid', Mn.getMaintenanceMachineBy)
+    app.get('/maintenanceMachineOne/:uuid', Mn.getMaintenanceMachineByOne)
+    app.get('/maintenanceMachine', Mn.getMaintenanceMachine)
+    app.get('/maintenanceCategory', Mn.getMaintenanceCategory)
+    app.get('/maintenanceMachineCom', Mn.getMaintenanceMachineCom)
+    app.get('/maintenanceMachineProcess', Mn.getMaintenanceMachineProcess)
+    app.get('/maintenanceControlStock', Mn.getMaintenanceControlStock)
 
-    app.get('/maintenanceRequest', MaintenanceSystem.getMaintenanceRequest)
-    app.get('/maintenanceReport', MaintenanceSystem.getMaintenanceReport)
-    app.get('/pgMaintenance', MaintenanceSystem.pGMaintenance)
-    app.get(
-        '/maintenanceStock',
-        verifyToken,
-        MaintenanceSystem.getMaintenanceStock
-    )
-    app.post(
-        '/maintenanceStock',
-        verifyToken,
-        MaintenanceSystem.insMaintenanceStock
-    )
-    app.post('/maintenanceMachine', MaintenanceSystem.insMaintenanceMachine)
+    app.get('/maintenanceRequest', Mn.getMaintenanceRequest)
+    app.get('/maintenanceReport', Mn.getMaintenanceReport)
+    app.get('/pgMaintenance', Mn.pGMaintenance)
+    app.get('/maintenanceStock', Mn.getMaintenanceStock)
+    app.post('/maintenanceStock', Mn.insMaintenanceStock)
+    app.post('/maintenanceMachine', Mn.insMaintenanceMachine)
 
-    app.post(
-        '/maintenanceSparepartBulk',
-        MaintenanceSystem.insMaintenanceSparepartBulkFind
-    )
-    app.post(
-        '/maintenanceSparepart',
-        // verifyToken,
-        MaintenanceSystem.insMaintenanceSparepart
-    )
-    app.post(
-        '/maintenanceReport',
-        verifyToken,
-        MaintenanceSystem.insMaintenanceReport
-    )
-    app.post(
-        '/maintenanceRequest',
-        verifyToken,
-        MaintenanceSystem.insMaintenanceRequest
-    )
-    app.post(
-        '/maintenanceCategory',
-        verifyToken,
-        MaintenanceSystem.insMaintenanceCategory
-    )
+    app.post('/maintenanceSparepart', Mn.insMaintenanceSparepart)
+    app.post('/maintenanceReport', Mn.insMaintenanceReport)
+    app.post('/maintenanceRequest', Mn.insMaintenanceRequest)
+    app.post('/maintenanceCategory', Mn.insMaintenanceCategory)
+    app.post('/maintenanceControlStock', Mn.instMaintenanceControlStock)
 
-    app.post('/maintenanceReportB', MaintenanceSystem.instMaintenanceBulkReport)
-    app.post(
-        '/maintenanceRequestB',
-        MaintenanceSystem.instMaintenanceBulkRequest
-    )
+    app.post('/maintenanceControlStockB', Mn.instMaintenanceBulkControllStock)
+    app.post('/maintenanceSparepartBulk', Mn.insMaintenanceSparepartBulkFind)
+    app.post('/maintenanceReportB', Mn.instMaintenanceBulkReport)
+    app.post('/maintenanceRequestB', Mn.instMaintenanceBulkRequest)
 }
