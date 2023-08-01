@@ -17,7 +17,6 @@ export default (app) => {
     app.get('/pgMaintenance', Mn.pGMaintenance)
     app.get('/maintenanceStock', Mn.getMaintenanceStock)
     app.post('/maintenanceStock', Mn.insMaintenanceStock)
-    app.post('/maintenanceMachine', Mn.insMaintenanceMachine)
 
     app.post('/maintenanceSparepart', Mn.insMaintenanceSparepart)
     app.post('/maintenanceReport', Mn.insMaintenanceReport)
@@ -25,6 +24,7 @@ export default (app) => {
     app.post('/maintenanceCategory', Mn.insMaintenanceCategory)
     app.post('/maintenanceControlStock', Mn.instMaintenanceControlStock)
 
+    app.post('/maintenanceMachine', Mn.insMaintenanceMachine)
     app.post('/maintenanceControlStockB', Mn.instMaintenanceBulkControllStock)
     app.post('/maintenanceSparepartBulk', Mn.insMaintenanceSparepartBulkFind)
     app.post('/maintenanceReportB', Mn.instMaintenanceBulkReport)

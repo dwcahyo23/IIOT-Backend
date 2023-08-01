@@ -114,6 +114,8 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     item_ready: DataTypes.STRING,
     audit_request: DataTypes.STRING(8),
     date_audit_request: DataTypes.DATE,
+    date_ready_request: DataTypes.DATE,
+    date_mre_request: DataTypes.DATE,
     mre_request: DataTypes.STRING,
     sts_wa1: DataTypes.STRING,
     sts_wa2: DataTypes.STRING,
