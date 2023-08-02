@@ -424,6 +424,9 @@ export default {
                             '>=',
                             '2023-01-01'
                         ),
+                        {
+                            chk_mark: { [Op.not]: 'C' },
+                        },
                     ],
                 },
                 attributes: ['sheet_no', 'mch_no', 'pri_no', 'chk_mark'],
