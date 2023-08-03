@@ -67,6 +67,33 @@ export default {
         }
     },
 
+    async updateMaintenanceMachine(req, res) {
+        const machine = req.body
+        try {
+            _.forEach(machine, async (val) => {
+                await MaintenanceMachine.findOne({
+                    where: { uuid: val.uuid, mch_code: val.mch_code },
+                })
+                    .then((obj) => {
+                        if (obj) {
+                            MaintenanceMachine.update(
+                                { ...val },
+                                {
+                                    where: { uuid: val.uuid },
+                                }
+                            )
+                            return res.end()
+                        } else {
+                            return res.end()
+                        }
+                    })
+                    .catch((error) => console.log(error.message))
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+
     async instMaintenanceBulkReport(req, res) {
         const machine = req.body
         try {
@@ -262,12 +289,40 @@ export default {
             const data = req.body
             await MaintenanceReport.findOne({
                 where: { sheet_no: req.body.id_report },
-            }).then((obj) => {
-                if (obj) {
-                    MaintenanceReport.update(data, {
-                        where: { sheet_no: data.id_report },
-                    })
+            })
+                .then((obj) => {
+                    if (obj) {
+                        MaintenanceReport.update(data, {
+                            where: { sheet_no: data.id_report },
+                        })
 
+                        //! for update chk mark Y in pG
+                        // PgMowMtn.update(
+                        //     { chk_mark: data.audit_report },
+                        //     {
+                        //         where: {
+                        //             sheet_no: data.id_report,
+                        //         },
+                        //     }
+                        // )
+                        // return res.status(200).json(data)
+                    }
+                    MaintenanceReport.create(
+                        {
+                            sheet_no: req.body.id_report,
+                            ...data,
+                        },
+                        { validate: true },
+                        {
+                            fields: [
+                                'mch_code',
+                                'mch_com',
+                                'chronological',
+                                'corrective',
+                                'prevention',
+                            ],
+                        }
+                    )
                     //! for update chk mark Y in pG
                     // PgMowMtn.update(
                     //     { chk_mark: data.audit_report },
@@ -277,35 +332,11 @@ export default {
                     //         },
                     //     }
                     // )
-                    // return res.status(200).json(data)
-                }
-                MaintenanceReport.create(
-                    {
-                        sheet_no: req.body.id_report,
-                        ...data,
-                    },
-                    { validate: true },
-                    {
-                        fields: [
-                            'mch_code',
-                            'mch_com',
-                            'chronological',
-                            'corrective',
-                            'prevention',
-                        ],
-                    }
-                )
-                //! for update chk mark Y in pG
-                // PgMowMtn.update(
-                //     { chk_mark: data.audit_report },
-                //     {
-                //         where: {
-                //             sheet_no: data.id_report,
-                //         },
-                //     }
-                // )
-                return res.status(200).json(data)
-            })
+                    return res.status(200).json(data)
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
         } catch (error) {
             console.log(error.message)
         }
