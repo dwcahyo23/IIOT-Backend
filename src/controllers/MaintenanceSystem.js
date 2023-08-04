@@ -63,7 +63,7 @@ export default {
             )
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -87,10 +87,10 @@ export default {
                             return res.end()
                         }
                     })
-                    .catch((error) => console.log(error.message))
+                    .catch((error) => console.log(error))
             })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -172,7 +172,7 @@ export default {
                 }
             })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -252,7 +252,7 @@ export default {
                 return res.status(200).json(response)
             }
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -266,7 +266,7 @@ export default {
             )
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -280,7 +280,7 @@ export default {
             )
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -335,10 +335,10 @@ export default {
                     return res.status(200).json(data)
                 })
                 .catch((error) => {
-                    console.log(error.message)
+                    console.log(error)
                 })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -406,7 +406,7 @@ export default {
                 return res.status(200).json(data)
             }
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -428,7 +428,7 @@ export default {
             }
             return res.status(200).json(data)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -437,7 +437,7 @@ export default {
             const response = await MaintenanceSparepartControlStcok.findAll({})
             res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -468,7 +468,7 @@ export default {
             const sp = await MaintenanceSparepart.findAll({})
 
             const machine = _.map(mch, (val) => {
-                console.log(val.mch_com)
+                // console.log(val.mch_com)
                 return {
                     ...val.dataValues,
                     sheet: _.find(pg, {
@@ -483,7 +483,7 @@ export default {
 
             return res.status(200).json(machine)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -503,7 +503,7 @@ export default {
             })
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -542,7 +542,7 @@ export default {
                 request: request,
             })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -619,7 +619,7 @@ export default {
                 user: user,
             })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -628,7 +628,7 @@ export default {
             const response = await MaintenanceCategory.findAll({})
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -640,7 +640,7 @@ export default {
             })
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -651,7 +651,7 @@ export default {
             })
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -674,7 +674,7 @@ export default {
 
             return res.status(200).json(result)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -697,7 +697,7 @@ export default {
 
             return res.status(200).json(result)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
@@ -710,7 +710,7 @@ export default {
             })
             return res.status(200).json(response)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     },
 
