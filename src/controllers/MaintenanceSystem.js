@@ -64,6 +64,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -91,6 +92,7 @@ export default {
             })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -121,6 +123,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -133,6 +136,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -173,6 +177,7 @@ export default {
             })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -188,6 +193,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -253,6 +259,7 @@ export default {
             }
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -267,6 +274,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -281,64 +289,89 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
     async insMaintenanceReport(req, res) {
         try {
             const data = req.body
-            await MaintenanceReport.findOne({
+            const find = await MaintenanceReport.findOne({
                 where: { sheet_no: req.body.id_report },
             })
-                .then((obj) => {
-                    if (obj) {
-                        MaintenanceReport.update(data, {
-                            where: { sheet_no: data.id_report },
-                        })
-
-                        //! for update chk mark Y in pG
-                        // PgMowMtn.update(
-                        //     { chk_mark: data.audit_report },
-                        //     {
-                        //         where: {
-                        //             sheet_no: data.id_report,
-                        //         },
-                        //     }
-                        // )
-                        // return res.status(200).json(data)
+            if (find == null) {
+                MaintenanceReport.create(
+                    {
+                        sheet_no: req.body.id_report,
+                        ...data,
+                    },
+                    { validate: true },
+                    {
+                        fields: [
+                            'mch_code',
+                            'mch_com',
+                            'chronological',
+                            'corrective',
+                            'prevention',
+                        ],
                     }
-                    MaintenanceReport.create(
-                        {
-                            sheet_no: req.body.id_report,
-                            ...data,
-                        },
-                        { validate: true },
-                        {
-                            fields: [
-                                'mch_code',
-                                'mch_com',
-                                'chronological',
-                                'corrective',
-                                'prevention',
-                            ],
-                        }
-                    )
-                    //! for update chk mark Y in pG
-                    // PgMowMtn.update(
-                    //     { chk_mark: data.audit_report },
-                    //     {
-                    //         where: {
-                    //             sheet_no: data.id_report,
-                    //         },
-                    //     }
-                    // )
-                    return res.status(200).json(data)
+                )
+                    .then(() => res.status(200).json(data))
+                    .catch((error) => res.status(500).json(error))
+            } else {
+                MaintenanceReport.update(data, {
+                    where: { sheet_no: data.id_report },
                 })
-                .catch((error) => {
-                    console.log(error)
-                })
+                    .then(() => res.status(200).json(data))
+                    .catch((error) => res.status(500).json(error))
+            }
+            // .then((obj) => {
+            //     if (obj) {
+            //         MaintenanceReport.update(data, {
+            //             where: { sheet_no: data.id_report },
+            //         })
+
+            //         //! for update chk mark Y in pG
+            //         // PgMowMtn.update(
+            //         //     { chk_mark: data.audit_report },
+            //         //     {
+            //         //         where: {
+            //         //             sheet_no: data.id_report,
+            //         //         },
+            //         //     }
+            //         // )
+            //         // return res.status(200).json(data)
+            //     }
+            //     MaintenanceReport.create(
+            //         {
+            //             sheet_no: req.body.id_report,
+            //             ...data,
+            //         },
+            //         { validate: true },
+            //         {
+            //             fields: [
+            //                 'mch_code',
+            //                 'mch_com',
+            //                 'chronological',
+            //                 'corrective',
+            //                 'prevention',
+            //             ],
+            //         }
+            //     )
+            //     //! for update chk mark Y in pG
+            //     // PgMowMtn.update(
+            //     //     { chk_mark: data.audit_report },
+            //     //     {
+            //     //         where: {
+            //     //             sheet_no: data.id_report,
+            //     //         },
+            //     //     }
+            //     // )
+            //     return res.status(200).json(data)
+            // })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -407,6 +440,7 @@ export default {
             }
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -429,6 +463,7 @@ export default {
             return res.status(200).json(data)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -438,6 +473,7 @@ export default {
             res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -484,6 +520,7 @@ export default {
             return res.status(200).json(machine)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -493,6 +530,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -504,6 +542,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -543,6 +582,7 @@ export default {
             })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -620,6 +660,7 @@ export default {
             })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -629,6 +670,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -641,6 +683,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -652,6 +695,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -675,6 +719,7 @@ export default {
             return res.status(200).json(result)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -698,6 +743,7 @@ export default {
             return res.status(200).json(result)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -711,6 +757,7 @@ export default {
             return res.status(200).json(response)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 
@@ -757,6 +804,7 @@ export default {
             res.status(200).json(result)
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
         }
     },
 }
