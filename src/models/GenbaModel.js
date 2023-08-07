@@ -30,13 +30,13 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
     images2: {
         type: DataTypes.JSON,
         defaultValue: [],
-        get: function () {
-            if (typeof this.getDataValue('images2') == 'string') {
-                return JSON.parse(this.getDataValue('images2'))
-            } else {
-                return this.getDataValue('images2')
-            }
-        },
+        // get: function () {
+        //     if (typeof this.getDataValue('images2') == 'string') {
+        //         return JSON.parse(this.getDataValue('images2'))
+        //     } else {
+        //         return this.getDataValue('images2')
+        //     }
+        // },
     },
     a_r1: DataTypes.INTEGER,
     a_r2: DataTypes.INTEGER,
