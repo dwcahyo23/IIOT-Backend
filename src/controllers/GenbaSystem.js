@@ -6,16 +6,18 @@ export default {
         const data = req.body
         try {
             await GenbaAcip.findOne({
-                where: { id: req.params.id },
+                where: { id_genba: req.params.id },
             }).then((obj) => {
                 if (obj) {
                     console.log(data)
-                    GenbaAcip.update(data, { where: { id: req.params.id } })
+                    GenbaAcip.update(data, {
+                        where: { id_genba: req.params.id },
+                    })
                     return res.status(200).send(`data was successfully updated`)
                 }
                 GenbaAcip.create({
                     ...data,
-                    id: req.params.id,
+                    id_genba: req.params.id,
                 })
                 return res.status(200).send(`data was successfully updated`)
             })
@@ -29,16 +31,20 @@ export default {
         const data = req.body
         try {
             await GenbaAcip.findOne({
-                where: { id: data.id },
+                where: { id_genba: data.id_genba },
             }).then((obj) => {
                 if (obj) {
-                    GenbaAcip.update(data, { where: { id: data.id } })
-                    return res.status(200).send(`data was successfully updated`)
+                    const resp = GenbaAcip.update(data, {
+                        where: { id_genba: data.id_genba },
+                    })
+                    return res.status(200).json(resp)
+                } else {
+                    return res.status(200).send(`error`)
                 }
-                return res.status(200).send(`data was successfully updated`)
             })
         } catch (error) {
             console.log(error.message)
+            return res.status(401).json(error)
         }
     },
 

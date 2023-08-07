@@ -5,7 +5,7 @@ import _ from 'lodash'
 const { DataTypes } = Sequelize
 
 export const GenbaAcip = sequelize.define('GenbaAcip', {
-    id: {
+    id_genba: {
         type: DataTypes.STRING,
         primaryKey: true,
     },
