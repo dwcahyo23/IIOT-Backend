@@ -29,6 +29,7 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
     },
     images2: {
         type: DataTypes.JSON,
+        defaultValue: [],
         get: function () {
             // console.log('img2:' + typeof this.getDataValue('images2'))
             if (typeof this.getDataValue('images2') == 'string') {
