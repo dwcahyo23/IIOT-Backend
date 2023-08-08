@@ -9,7 +9,7 @@ export default {
                 where: { id_genba: req.params.id },
             }).then((obj) => {
                 if (obj) {
-                    console.log(data)
+                    // console.log(data)
                     GenbaAcip.update(data, {
                         where: { id_genba: req.params.id },
                     })

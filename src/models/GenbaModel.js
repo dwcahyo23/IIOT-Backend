@@ -18,8 +18,8 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
     case: DataTypes.STRING,
     images1: {
         type: DataTypes.JSON,
-        defaultValue: [],
         get: function () {
+            // console.log('img1:' + typeof this.getDataValue('images1'))
             if (typeof this.getDataValue('images1') == 'string') {
                 return JSON.parse(this.getDataValue('images1'))
             } else {
@@ -29,17 +29,13 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
     },
     images2: {
         type: DataTypes.JSON,
-        defaultValue: [],
         get: function () {
+            // console.log('img2:' + typeof this.getDataValue('images2'))
             if (typeof this.getDataValue('images2') == 'string') {
                 return JSON.parse(this.getDataValue('images2'))
             } else {
                 return this.getDataValue('images2')
             }
-        },
-        set: function (value) {
-            // const gzippedBuffer = gzipSync(value);
-            this.setDataValue('images2', value)
         },
     },
     a_r1: DataTypes.INTEGER,

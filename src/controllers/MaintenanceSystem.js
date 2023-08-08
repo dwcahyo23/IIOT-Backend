@@ -316,13 +316,34 @@ export default {
                         ],
                     }
                 )
-                    .then(() => res.status(200).json(data))
+                    .then(() => {
+                        // PgMowMtn.update(
+                        //     { chk_mark: data.audit_report },
+                        //     {
+                        //         where: {
+                        //             sheet_no: data.id_report,
+                        //         },
+                        //     }
+                        // )
+
+                        res.status(200).json(data)
+                    })
                     .catch((error) => res.status(500).json(error))
             } else {
                 MaintenanceReport.update(data, {
                     where: { sheet_no: data.id_report },
                 })
-                    .then(() => res.status(200).json(data))
+                    .then(() => {
+                        // PgMowMtn.update(
+                        //     { chk_mark: data.audit_report },
+                        //     {
+                        //         where: {
+                        //             sheet_no: data.id_report,
+                        //         },
+                        //     }
+                        // )
+                        res.status(200).json(data)
+                    })
                     .catch((error) => res.status(500).json(error))
             }
             // .then((obj) => {
@@ -332,15 +353,15 @@ export default {
             //         })
 
             //         //! for update chk mark Y in pG
-            //         // PgMowMtn.update(
-            //         //     { chk_mark: data.audit_report },
-            //         //     {
-            //         //         where: {
-            //         //             sheet_no: data.id_report,
-            //         //         },
-            //         //     }
-            //         // )
-            //         // return res.status(200).json(data)
+            // PgMowMtn.update(
+            //     { chk_mark: data.audit_report },
+            //     {
+            //         where: {
+            //             sheet_no: data.id_report,
+            //         },
+            //     }
+            // )
+            // return res.status(200).json(data)
             //     }
             //     MaintenanceReport.create(
             //         {
