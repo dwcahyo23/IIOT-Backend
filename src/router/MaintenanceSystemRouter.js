@@ -20,6 +20,7 @@ export default (app) => {
 
     app.post('/maintenanceSparepart', Mn.insMaintenanceSparepart)
     app.post('/maintenanceReport', Mn.insMaintenanceReport)
+    app.post('/maintenanceWorkshopReport', Mn.instMaintenanceBulkWorkshopReport)
     app.post('/maintenanceRequest', Mn.insMaintenanceRequest)
     app.post('/maintenanceCategory', Mn.insMaintenanceCategory)
     app.post('/maintenanceControlStock', Mn.instMaintenanceControlStock)

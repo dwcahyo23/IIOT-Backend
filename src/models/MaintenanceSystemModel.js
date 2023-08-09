@@ -144,6 +144,38 @@ export const MaintenanceReport = sequelize.define('MaintenanceReport', {
     audit_report: DataTypes.STRING,
 })
 
+export const MaintenanceWorkshopReport = sequelize.define(
+    'MaintenanceWorkshopReport',
+    {
+        sheet_no: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+        },
+        mch_code: DataTypes.STRING,
+        mch_com: DataTypes.STRING,
+        code: DataTypes.STRING,
+        date_report: DataTypes.DATE,
+        kind: DataTypes.STRING,
+        chronological: DataTypes.TEXT,
+        task_user: {
+            type: DataTypes.JSON,
+            defaultValue: [],
+            get: function () {
+                if (typeof this.getDataValue('task_user') == 'string') {
+                    return JSON.parse(this.getDataValue('task_user'))
+                } else {
+                    return this.getDataValue('task_user')
+                }
+            },
+        },
+        user_rep1: DataTypes.STRING,
+        user_rep2: DataTypes.STRING,
+        date_target: DataTypes.DATE,
+        date_finish: DataTypes.DATE,
+        audit_report: DataTypes.STRING,
+    }
+)
+
 export const MaintenanceStock = sequelize.define('MaintenanceStock', {
     uuid: {
         type: DataTypes.STRING(8),

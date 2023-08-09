@@ -7,6 +7,7 @@ import {
     MaintenanceReport,
     MaintenanceSparepart,
     MaintenanceSparepartControlStcok,
+    MaintenanceWorkshopReport,
 } from '../models/MaintenanceSystemModel'
 
 import { AuthData } from '../models/AuthModel'
@@ -131,6 +132,19 @@ export default {
         const machine = req.body
         try {
             const response = await MaintenanceRequest.bulkCreate(machine, {
+                validate: true,
+            })
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
+
+    async instMaintenanceBulkWorkshopReport(req, res) {
+        const data = req.body
+        try {
+            const response = await MaintenanceWorkshopReport.bulkCreate(data, {
                 validate: true,
             })
             return res.status(200).json(response)
