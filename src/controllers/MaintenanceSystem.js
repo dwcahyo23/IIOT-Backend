@@ -655,6 +655,7 @@ export default {
                 where: {
                     mch_code: getId.mch_code,
                     mch_com: getId.mch_com,
+                    audit_request: { [Op.not]: 'C' },
                 },
                 order: [['sheet_no', 'DESC']],
             })
