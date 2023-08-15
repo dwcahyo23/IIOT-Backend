@@ -49,7 +49,11 @@ export default {
     },
 
     async getGenbaAcip(req, res) {
-        await GenbaAcip.findAll({})
+        await GenbaAcip.findAll({ where: {
+            images1 :{
+                [Op.not]: null, 
+            }
+        }})
             .then((data) => {
                 return res.status(200).json({ payload: 'success', data: data })
             })
