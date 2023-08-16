@@ -49,14 +49,38 @@ export default {
     },
 
     async getGenbaAcip(req, res) {
-        await GenbaAcip.findAll({ where: {
-            images1 :{
-                [Op.not]: null, 
-            }
-        }})
+        await GenbaAcip.findAll({
+            where: {
+                images1: {
+                    [Op.not]: null,
+                },
+            },
+        })
             .then((data) => {
                 return res.status(200).json({ payload: 'success', data: data })
             })
             .catch((error) => console.log(error.message))
     },
+
+    async getGenbaAcipOne(req, res) {
+        try {
+            const response = await GenbaAcip.findOne({
+                where: { id_genba: req.params.id },
+            })
+            return res.status(200).json(response)
+            
+        } catch (error) {
+            console.log(error.message)
+        }
+        // try {
+        //     const response = await GenbaAcip.findOne({
+        //         where: {
+        //             id_genba: req.params.id,
+        //         })
+        //         return res.status(200).json(response)
+            
+        // } catch (error) {
+        //     console.log(error.message)
+        // }
+    }
 }
