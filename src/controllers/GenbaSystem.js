@@ -68,19 +68,19 @@ export default {
                 where: { id_genba: req.params.id },
             })
             return res.status(200).json(response)
-            
         } catch (error) {
             console.log(error.message)
         }
-        // try {
-        //     const response = await GenbaAcip.findOne({
-        //         where: {
-        //             id_genba: req.params.id,
-        //         })
-        //         return res.status(200).json(response)
-            
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
-    }
+    },
+
+    async delGenbaAcipOne(req, res) {
+        try {
+            const response = await GenbaAcip.destroy({
+                where: { id_genba: req.params.id },
+            })
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
 }

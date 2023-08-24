@@ -1,4 +1,4 @@
-import { Op, Sequelize, json, where } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import {
     MaintenanceMachine,
     MaintenanceCategory,
@@ -9,14 +9,12 @@ import {
     MaintenanceSparepartControlStcok,
     MaintenanceWorkshopReport,
 } from '../models/MaintenanceSystemModel'
-
 import { AuthData } from '../models/AuthModel'
-
 import { GenbaAcip } from '../models/GenbaModel'
-
 import { PgMowMtn } from '../models/PgMowMtn'
 import _ from 'lodash'
 import { error } from 'winston'
+import dayjs from 'dayjs'
 
 MaintenanceMachine.hasMany(MaintenanceSparepart, {
     foreignKey: 'mch_code',
@@ -818,6 +816,49 @@ export default {
             // const req = await MaintenanceRequest.findAll({
             //     where: { audit_request: 'N' },
             // })
+
+            const result = _.map(response, (val) => {
+                return {
+                    ...val.dataValues,
+                    mch_index: _.find(mch, {
+                        mch_code: val.mch_no,
+                        mch_com:
+                            val.com_no == '01'
+                                ? 'GM1'
+                                : val.com_no == '02'
+                                ? 'GM2'
+                                : val.com_no == '03'
+                                ? 'GM3'
+                                : 'GM5',
+                    }),
+                    // request: _.filter(req, { sheet_no: val.sheet_no }),
+                }
+            })
+
+            res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
+
+    async pGMaintenanceToday(req, res) {
+        try {
+            const response = await PgMowMtn.findAll({
+                where: {
+                    chk_mark: { [Op.not]: 'C' },
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('date', Sequelize.col('ymd')),
+                            '>=',
+                            dayjs().format('YYYY-MM-DD')
+                        ),
+                    ],
+                },
+                order: [['s_ymd', 'DESC']],
+            })
+
+            const mch = await MaintenanceMachine.findAll({})
 
             const result = _.map(response, (val) => {
                 return {
