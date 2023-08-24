@@ -156,7 +156,7 @@ export default {
                         Sequelize.where(
                             Sequelize.fn('date', Sequelize.col('ymd')),
                             '>=',
-                            dayjs().format('YYYY-MM-DD')
+                            '2023-08-21'
                         ),
                         {
                             sts_wa: { [Op.eq]: 'Y' },
