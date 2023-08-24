@@ -57,6 +57,9 @@ export default {
                         'mch_loc',
                         'mch_prod',
                         'mch_maker',
+                        'responsible',
+                        'mch_hp',
+                        'memo',
                     ],
                 }
             )

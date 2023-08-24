@@ -4,9 +4,9 @@ import express from 'express'
 import cors from 'cors'
 import AuthRouter from './router/AuthRouter.js'
 import Genba from './router/GenbaRouter.js'
-
 import ModbusAppRouter from './router/ModbusAppRouter.js'
 import MaintenanceSystemRouter from './router/MaintenanceSystemRouter.js'
+import WhatsappRouter from './router/WhatsappRouter.js'
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ app.use(AuthRouter)
 ModbusAppRouter(app)
 MaintenanceSystemRouter(app)
 Genba(app)
+WhatsappRouter(app)
 
 app.listen(process.env.PORT_APP, () =>
     console.log(`Server up & running in ${process.env.PORT_APP}`)
