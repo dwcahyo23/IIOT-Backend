@@ -188,20 +188,19 @@ export const MaintenanceStock = sequelize.define('MaintenanceStock', {
 })
 
 export const MaintenanceSparepartControlStcok = sequelize.define(
-    'MaintenanceSparepartControlStcok',
+    'MaintenanceSparepartControlStock',
     {
         uuid: {
-            type: DataTypes.STRING(8),
-            defaultValue: DataTypes.UUIDV4,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
         sparepart_name: DataTypes.STRING,
         op_qty: DataTypes.INTEGER,
-        op_oum: DataTypes.STRING,
+        uom_op: DataTypes.STRING(8),
         oq_qty: DataTypes.INTEGER,
-        oq_oum: DataTypes.STRING,
+        uom_oq: DataTypes.STRING(8),
         stock_qty: DataTypes.INTEGER,
-        stock_oum: DataTypes.STRING,
+        uom_stock: DataTypes.STRING(8),
         sparepart_category: DataTypes.STRING,
         lead_time: DataTypes.INTEGER,
         no_pr: DataTypes.STRING,

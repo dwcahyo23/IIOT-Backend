@@ -1,5 +1,7 @@
 import { Op, Sequelize } from 'sequelize'
 import { GenbaAcip } from '../models/GenbaModel'
+import sharp from 'sharp'
+import _ from 'lodash'
 
 export default {
     async instGenbaAcip(req, res) {
@@ -44,6 +46,61 @@ export default {
             }
         } catch (error) {
             console.log(error.message)
+            return res.status(500).json(error)
+        }
+    },
+
+    async ConvertAcip(req, res) {
+        const data = req.body
+        try {
+            const response = await GenbaAcip.findAll({
+                where: Sequelize.where(
+                    Sequelize.fn('char_length', Sequelize.col('images1')),
+                    {
+                        [Op.gt]: 100000,
+                    }
+                ),
+                raw: true,
+            })
+
+            const compresImage = (attachmentData, resize, quality) => {
+                let imgBuffer = Buffer.from(attachmentData.data, 'base64')
+                return new Promise((resolve, reject) => {
+                    sharp(imgBuffer)
+                        .resize(resize)
+                        .jpeg({ quality: quality })
+                        .toBuffer()
+                        .then((resizedImageBuffer) => {
+                            let resizedImageData =
+                                resizedImageBuffer.toString('base64')
+                            let resizedBase64 = `data:${attachmentData.mimetype};base64,${resizedImageData}`
+                            resolve({
+                                mimetype: attachmentData.mimetype,
+                                data: resizedImageData,
+                                filename: attachmentData.filename,
+                                filesize: resizedImageData.length,
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            reject(err)
+                        })
+                })
+            }
+
+            if (response.length > 0) {
+                _.forEach(response, async (val) => {
+                    const images = JSON.parse(val.images1)
+                    await compresImage(images, data.reszie, data.quality).then(
+                        (x) => {
+                            console.log(`${images.filesize} => ${x.filesize}`)
+                        }
+                    )
+                })
+            }
+
+            return res.status(200).send('convert images')
+        } catch (error) {
             return res.status(500).json(error)
         }
     },

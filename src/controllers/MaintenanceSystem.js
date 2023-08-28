@@ -203,6 +203,21 @@ export default {
                 data,
                 {
                     validate: true,
+                },
+                {
+                    fields: [
+                        'uuid',
+                        'sparepart_name',
+                        'op_qty',
+                        'uom_op',
+                        'oq_qty',
+                        'uom_oq',
+                        'stock_qty',
+                        'uom_stock',
+                        'sparepart_category',
+                        'lead_time',
+                        'no_pr',
+                    ],
                 }
             )
             return res.status(200).json(response)
