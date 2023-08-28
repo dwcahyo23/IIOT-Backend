@@ -50,14 +50,15 @@ export default {
 
     async getGenbaAcip(req, res) {
         try {
-            const response = await GenbaAcip.findAll({
+            const data = await GenbaAcip.findAll({
                 where: {
                     images1: {
                         [Op.not]: null,
                     },
                 },
             })
-            return res.status(200).json(response)
+            return res.status(200).json({ payload: 'success', data: data })
+            // return res.status(200).json(response)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json(error)
