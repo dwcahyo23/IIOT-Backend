@@ -191,7 +191,8 @@ export default {
                                             Sequelize.col('ymd')
                                         ),
                                         '>=',
-                                        dayjs().format('YYYY-MM-DD')
+                                        '2023-08-28'
+                                        // dayjs().format('YYYY-MM-DD')
                                     ),
                                     {
                                         //validasi pgsql
