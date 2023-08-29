@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import { Op, Sequelize, where } from 'sequelize'
 import {
     MaintenanceMachine,
     MaintenanceCategory,
@@ -512,6 +512,63 @@ export default {
                 })
             }
             return res.status(200).json(data)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
+
+    async updateStockMaintenanceControlStock(req, res) {
+        try {
+            const data = req.body
+
+            const result = (db, xlsx) => {
+                return new Promise((resolve, reject) => {
+                    const id = _(db)
+                        .map((val) => {
+                            const newUuid = val.uuid.split(',')
+                            return newUuid
+                        })
+                        .flatMapDeep()
+                        .filter()
+                        .value()
+
+                    if (id.length > 0) {
+                        const fillterXlsx = _.filter(xlsx, (val) =>
+                            _.includes(id, val.mat_no)
+                        )
+
+                        resolve(fillterXlsx)
+                    } else {
+                        reject('uuid not match')
+                    }
+                })
+            }
+
+            if (_.isArray(data) && data.length > 1) {
+                const response = await MaintenanceSparepartControlStcok.findAll(
+                    { raw: true }
+                )
+                if (response.length > 1) {
+                    result(response, data)
+                        .then((x) => {
+                            _.forEach(x, (val) => {
+                                MaintenanceSparepartControlStcok.update(
+                                    {
+                                        stock_qty: val.stk_qty,
+                                    },
+                                    { where: { uuid: val.mat_no } }
+                                )
+                            })
+                            res.status(200).json(response)
+                        })
+                        .catch((e) => res.status(500).json(e))
+                } else {
+                    return res.status(404)
+                }
+            } else {
+                return res.status(404)
+            }
         } catch (error) {
             console.log(error)
             res.status(500).json(error)
