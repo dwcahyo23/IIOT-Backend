@@ -23,6 +23,7 @@ export const MaintenanceMachine = sequelize.define(
         mch_prod: DataTypes.STRING,
         mch_maker: DataTypes.STRING,
         responsible: DataTypes.STRING,
+        section: DataTypes.STRING,
         mch_hp: DataTypes.DOUBLE,
         memo: DataTypes.STRING,
     },

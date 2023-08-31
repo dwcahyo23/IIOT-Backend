@@ -35,4 +35,5 @@ export default (app) => {
     app.post('/maintenanceSparepartBulk', Mn.insMaintenanceSparepartBulkFind)
     app.post('/maintenanceReportB', Mn.instMaintenanceBulkReport)
     app.post('/maintenanceRequestB', Mn.instMaintenanceBulkRequest)
+    app.get('/maintenanceDashboard/:com/:section', Mn.dashboardMN)
 }

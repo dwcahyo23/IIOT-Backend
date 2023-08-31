@@ -12,7 +12,7 @@ import {
 import { AuthData } from '../models/AuthModel'
 import { GenbaAcip } from '../models/GenbaModel'
 import { PgMowMtn } from '../models/PgMowMtn'
-import _ from 'lodash'
+import _, { reject } from 'lodash'
 import { error } from 'winston'
 import dayjs from 'dayjs'
 
@@ -888,10 +888,6 @@ export default {
 
             const mch = await MaintenanceMachine.findAll({})
 
-            // const req = await MaintenanceRequest.findAll({
-            //     where: { audit_request: 'N' },
-            // })
-
             const result = _.map(response, (val) => {
                 return {
                     ...val.dataValues,
@@ -906,11 +902,220 @@ export default {
                                 ? 'GM3'
                                 : 'GM5',
                     }),
-                    // request: _.filter(req, { sheet_no: val.sheet_no }),
                 }
             })
 
             res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
+
+    async dashboardMN(req, res) {
+        const com = req.params.com
+        const sectionCode =
+            req.params.section == 'machinery'
+                ? ['01', '02', '03', '06']
+                : req.params.section == 'utility'
+                ? ['01', '02', '03']
+                : req.params.section == 'workshop'
+                ? ['05', '04', '07']
+                : ''
+
+        const sectionName =
+            req.params.section == 'machinery'
+                ? {
+                      breakdown: '01',
+                      still_run: '02',
+                      preventive: '03',
+                      project: '06',
+                  }
+                : req.params.section == 'utility'
+                ? { breakdown: '01', still_run: '02', preventive: '03' }
+                : req.params.section == 'workshop'
+                ? {
+                      breakdown: '05',
+                      still_run: '04',
+                      project: '07',
+                  }
+                : ''
+        const section =
+            req.params.section == 'machinery'
+                ? ['machinery']
+                : req.params.section == 'utility'
+                ? ['utility']
+                : req.params.section == 'workshop'
+                ? ['machinery', 'utility']
+                : ''
+
+        const makeCake = (material, spice) => {
+            return new Promise((resolve, reject) => {
+                const useMixing = _(material)
+                    .map((val) => {
+                        if (dayjs(val.ymd).year() == dayjs().year())
+                            return {
+                                ...val,
+                                mch_index: _.find(
+                                    spice,
+                                    {
+                                        mch_code: val.mch_no,
+                                        mch_com:
+                                            val.com_no == '01'
+                                                ? 'GM1'
+                                                : val.com_no == '02'
+                                                ? 'GM2'
+                                                : val.com_no == '03'
+                                                ? 'GM3'
+                                                : 'GM5',
+                                    } || {}
+                                ),
+                            }
+                    })
+                    .groupBy((val) => val.mch_index?.responsible)
+                    .omit(['undefined'])
+                    .value()
+
+                if (_.isObject(useMixing) && _.isEmpty(useMixing == false)) {
+                    const mixingKey = _.keys(useMixing)
+                    useMixing['Bos'] = _.concat(
+                        _.flatMapDeep(_.at(useMixing, mixingKey))
+                    )
+                    resolve(useMixing)
+                } else {
+                    reject('some error in makeCake mixing')
+                }
+            })
+        }
+
+        const useOven = (stove) => {
+            return new Promise((resolve, reject) => {
+                const goodCake = _(stove)
+                    .mapValues((items) => {
+                        return _(items)
+                            .orderBy(['ymd'], ['desc'])
+                            .groupBy((val) => dayjs(val.ymd).format('MMMM'))
+                            .mapValues((items) => {
+                                return {
+                                    data: items,
+                                    breakdown: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.breakdown
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    still_run: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.still_run
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    preventive: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.preventive
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    project: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.project
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    work_order: _.countBy(items, (val) =>
+                                        val ? 'pass' : 'fail'
+                                    ),
+                                    audit: _.countBy(items, (val) =>
+                                        val.chk_mark == 'Y' ? 'pass' : 'fail'
+                                    ),
+                                    breakdown_audit: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.breakdown &&
+                                        val.chk_mark == 'Y'
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    still_run_audit: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.still_run &&
+                                        val.chk_mark == 'Y'
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    preventive_audit: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.preventive &&
+                                        val.chk_mark == 'Y'
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                    project_audit: _.countBy(items, (val) =>
+                                        val.pri_no == sectionName?.project &&
+                                        val.chk_mark == 'Y'
+                                            ? 'pass'
+                                            : 'fail'
+                                    ),
+                                }
+                            })
+                            .value()
+                    })
+                    .value()
+
+                if (_.isObject(goodCake)) {
+                    resolve(goodCake)
+                } else {
+                    reject('some error in useOven')
+                }
+            })
+        }
+
+        try {
+            const response = await PgMowMtn.findAll({
+                where: {
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('date', Sequelize.col('ymd')),
+                            '>=',
+                            '2023-01-01'
+                        ),
+                        { chk_mark: { [Op.not]: 'C' } },
+                        { com_no: { [Op.eq]: com } },
+                        { pri_no: { [Op.in]: sectionCode } },
+                    ],
+                },
+                order: [['s_ymd', 'DESC']],
+                raw: true,
+            })
+
+            if (response.length > 0) {
+                const plant =
+                    com == '01'
+                        ? 'GM1'
+                        : com == '02'
+                        ? 'GM2'
+                        : com == '03'
+                        ? 'GM3'
+                        : com == '06'
+                        ? 'GM5'
+                        : ''
+                const mch = await MaintenanceMachine.findAll({
+                    where: {
+                        [Op.and]: [
+                            { mch_com: { [Op.eq]: plant } },
+                            { responsible: { [Op.not]: null } },
+                            { section: { [Op.in]: section } },
+                        ],
+                    },
+                    raw: true,
+                })
+
+                if (mch.length > 0) {
+                    makeCake(response, mch)
+                        .then((x) =>
+                            useOven(x)
+                                .then((y) => res.status(200).json(y))
+                                .catch((err) => res.status(500).json(err))
+                        )
+                        .catch((err) => res.status(500).json(err))
+                } else {
+                    return res.status(404).json('data mch not found')
+                }
+            } else {
+                return res.status(404).json('data pg not found')
+            }
         } catch (error) {
             console.log(error)
             res.status(500).json(error)
