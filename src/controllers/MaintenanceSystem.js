@@ -12,7 +12,7 @@ import {
 import { AuthData } from '../models/AuthModel'
 import { GenbaAcip } from '../models/GenbaModel'
 import { PgMowMtn } from '../models/PgMowMtn'
-import _, { reject } from 'lodash'
+import _ from 'lodash'
 import { error } from 'winston'
 import dayjs from 'dayjs'
 
@@ -27,16 +27,16 @@ MaintenanceSparepart.belongsTo(MaintenanceMachine, {
     constraints: false,
 })
 
-MaintenanceCategory.hasMany(MaintenanceSparepart, {
-    foreignKey: 'slug',
-    sourceKey: 'slug',
-    constraints: false,
-})
-MaintenanceSparepart.belongsTo(MaintenanceCategory, {
-    foreignKey: 'slug',
-    targetKey: 'slug',
-    constraints: false,
-})
+// MaintenanceCategory.hasMany(MaintenanceSparepart, {
+//     foreignKey: 'slug',
+//     sourceKey: 'slug',
+//     constraints: false,
+// })
+// MaintenanceSparepart.belongsTo(MaintenanceCategory, {
+//     foreignKey: 'slug',
+//     targetKey: 'slug',
+//     constraints: false,
+// })
 
 export default {
     //--- for dev bulk post  ---
@@ -158,12 +158,12 @@ export default {
     async insMaintenanceSparepartBulkFind(req, res) {
         try {
             const sparepart = req.body
-            console.log(sparepart.length)
             _.forEach(sparepart, async (val, index) => {
                 const boms = await MaintenanceSparepart.findAll({
                     where: {
                         mch_code: val.mch_code,
                         category: val.category,
+                        item_change_date: { [Op.not]: null },
                     },
                 })
 
@@ -232,11 +232,11 @@ export default {
     async insMaintenanceSparepart(req, res) {
         try {
             const sparepart = req.body
-            console.log(sparepart.length)
             const boms = await MaintenanceSparepart.findAll({
                 where: {
                     mch_code: sparepart.mch_code,
                     category: sparepart.category,
+                    item_change_date: { [Op.not]: null },
                 },
             })
 
@@ -308,31 +308,31 @@ export default {
         }
     },
 
-    async insMaintenanceCategory(req, res) {
-        const category = req.body
-        try {
-            const response = await MaintenanceCategory.bulkCreate(
-                category,
-                { validate: true },
-                { fields: ['title', 'slug', 'color'] }
-            )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async insMaintenanceCategory(req, res) {
+    //     const category = req.body
+    //     try {
+    //         const response = await MaintenanceCategory.bulkCreate(
+    //             category,
+    //             { validate: true },
+    //             { fields: ['title', 'slug', 'color'] }
+    //         )
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     async insMaintenanceReport(req, res) {
         try {
             const data = req.body
             const find = await MaintenanceReport.findOne({
-                where: { sheet_no: req.body.id_report },
+                where: { sheet_no: req.body.sheet_no },
             })
             if (find == null) {
                 MaintenanceReport.create(
                     {
-                        sheet_no: req.body.id_report,
+                        sheet_no: req.body.sheet_no,
                         ...data,
                     },
                     { validate: true },
@@ -347,81 +347,172 @@ export default {
                     }
                 )
                     .then(() => {
-                        // PgMowMtn.update(
-                        //     { chk_mark: data.audit_report },
-                        //     {
-                        //         where: {
-                        //             sheet_no: data.id_report,
-                        //         },
-                        //     }
-                        // )
-
                         res.status(200).json(data)
                     })
                     .catch((error) => res.status(500).json(error))
             } else {
                 MaintenanceReport.update(data, {
-                    where: { sheet_no: data.id_report },
+                    where: { sheet_no: data.sheet_no },
                 })
                     .then(() => {
-                        // PgMowMtn.update(
-                        //     { chk_mark: data.audit_report },
-                        //     {
-                        //         where: {
-                        //             sheet_no: data.id_report,
-                        //         },
-                        //     }
-                        // )
                         res.status(200).json(data)
                     })
                     .catch((error) => res.status(500).json(error))
             }
-            // .then((obj) => {
-            //     if (obj) {
-            //         MaintenanceReport.update(data, {
-            //             where: { sheet_no: data.id_report },
-            //         })
-
-            //         //! for update chk mark Y in pG
-            // PgMowMtn.update(
-            //     { chk_mark: data.audit_report },
-            //     {
-            //         where: {
-            //             sheet_no: data.id_report,
-            //         },
-            //     }
-            // )
-            // return res.status(200).json(data)
-            //     }
-            //     MaintenanceReport.create(
-            //         {
-            //             sheet_no: req.body.id_report,
-            //             ...data,
-            //         },
-            //         { validate: true },
-            //         {
-            //             fields: [
-            //                 'mch_code',
-            //                 'mch_com',
-            //                 'chronological',
-            //                 'corrective',
-            //                 'prevention',
-            //             ],
-            //         }
-            //     )
-            //     //! for update chk mark Y in pG
-            //     // PgMowMtn.update(
-            //     //     { chk_mark: data.audit_report },
-            //     //     {
-            //     //         where: {
-            //     //             sheet_no: data.id_report,
-            //     //         },
-            //     //     }
-            //     // )
-            //     return res.status(200).json(data)
-            // })
         } catch (error) {
             console.log(error)
+            res.status(500).json(error)
+        }
+    },
+
+    async handleMaintenanceRequest(req, res) {
+        const options = req.params.options
+        const user = req.params.user
+        const dataRow = req.body
+
+        try {
+            const userSubmit = await AuthData.findAll({
+                where: { datumUuid: user },
+                raw: true,
+            })
+
+            if (options == 'audit') {
+                let uuid_request = dataRow.map((data) => data.uuid_request)
+                MaintenanceRequest.update(
+                    {
+                        date_audit_request: dayjs(),
+                        audit_request: 'Y',
+                        user_req2: userSubmit.displayName,
+                    },
+                    { where: { uuid_request: uuid_request, item_ready: 'Y' } }
+                )
+                    .then(() => {
+                        MaintenanceSparepart.update(
+                            {
+                                item_change_date: [dayjs()],
+                            },
+                            { where: { sheet_no: uuid_request } }
+                        )
+
+                        res.status(200).json({
+                            message: 'Data audited successfully',
+                        })
+                    })
+                    .catch((err) => res.status(500).json(err))
+            } else if (options == 'ready') {
+                let uuid_request = dataRow.map((data) => data.uuid_request)
+                MaintenanceRequest.update(
+                    {
+                        date_ready_request: dayjs(),
+                        item_ready: 'Y',
+                    },
+                    { where: { uuid_request: uuid_request } }
+                )
+                    .then(() =>
+                        res
+                            .status(200)
+                            .json({ message: 'Data updated successfully' })
+                    )
+                    .catch((err) => res.status(500).json(err))
+            } else if (options == 'cancel') {
+                let uuid_request = dataRow.map((data) => data.uuid_request)
+                MaintenanceRequest.update(
+                    {
+                        audit_request: 'C',
+                        user_req2: userSubmit.displayName,
+                    },
+                    { where: { uuid_request: uuid_request } }
+                )
+                    .then(() =>
+                        res
+                            .status(200)
+                            .json({ message: 'Data canceled successfully' })
+                    )
+                    .catch((err) => res.status(500).json(err))
+            } else if (options == 'save') {
+                MaintenanceRequest.create(dataRow, { validate: true })
+                    .then(() =>
+                        res
+                            .status(200)
+                            .json({ message: 'Data saved successfully' })
+                    )
+                    .catch((err) => res.status(500).json(err))
+            } else if (_.includes(options, 'MRE')) {
+                let uuid_request = dataRow.map((data) => data.uuid_request)
+                MaintenanceRequest.update(
+                    {
+                        date_mre_request: dayjs(),
+                        mre_request: options,
+                    },
+                    { where: { uuid_request: uuid_request } }
+                )
+                    .then(() =>
+                        res
+                            .status(200)
+                            .json({ message: 'Data updated successfully' })
+                    )
+                    .catch((err) => res.status(500).json(err))
+            } else if (options == 'lifeTime') {
+                const { sparepart, request, machine, uuid_request } = dataRow
+
+                const boms = await MaintenanceSparepart.findAll({
+                    where: {
+                        mch_code: machine.mch_code,
+                        mch_com: machine.mch_com,
+                        category: sparepart.category,
+                    },
+                    raw: true,
+                })
+
+                if (boms.length < 1) {
+                    const bom = `${
+                        sparepart.category
+                    }${machine.mch_code.replace(/\-/g, '')}-${
+                        1001 + boms.length
+                    }`
+                    MaintenanceSparepart.create({
+                        mch_code: machine.mch_code,
+                        mch_com: machine.mch_com,
+                        bom: bom,
+                        slug: 'life-time',
+                        category: sparepart.category,
+                        item_life_time: sparepart.item_life_time,
+                        item_lead_time: sparepart.item_lead_time,
+                        item_name: request.item_stock,
+                        sheet_no: uuid_request,
+                    })
+                        .then(() =>
+                            res
+                                .status(200)
+                                .json({ message: 'Data updated successfully' })
+                        )
+                        .catch((err) => res.status(500).json(err))
+                } else {
+                    const bom = `${
+                        sparepart.category
+                    }${machine.mch_code.replace(/\-/g, '')}-${
+                        1001 + boms.length
+                    }`
+                    MaintenanceSparepart.create({
+                        mch_code: machine.mch_code,
+                        mch_com: machine.mch_com,
+                        bom: bom,
+                        slug: 'life-time',
+                        category: sparepart.category,
+                        item_life_time: sparepart.item_life_time,
+                        item_lead_time: sparepart.item_lead_time,
+                        item_name: request.item_stock,
+                        sheet_no: uuid_request,
+                    })
+                        .then(() =>
+                            res
+                                .status(200)
+                                .json({ message: 'Data updated successfully' })
+                        )
+                        .catch((err) => res.status(500).json(err))
+                }
+            }
+        } catch (error) {
             res.status(500).json(error)
         }
     },
@@ -609,7 +700,11 @@ export default {
                 order: [['sheet_no', 'DESC']],
             })
 
-            const sp = await MaintenanceSparepart.findAll({})
+            const sp = await MaintenanceSparepart.findAll({
+                where: {
+                    item_change_date: { [Op.not]: null },
+                },
+            })
 
             const machine = _.map(mch, (val) => {
                 // console.log(val.mch_com)
@@ -741,6 +836,7 @@ export default {
                 where: {
                     mch_code: getId.mch_code,
                     mch_com: getId.mch_com,
+                    item_change_date: { [Op.not]: null },
                 },
                 order: [['createdAt', 'DESC']],
             })
@@ -773,15 +869,110 @@ export default {
         }
     },
 
-    async getMaintenanceCategory(req, res) {
-        try {
-            const response = await MaintenanceCategory.findAll({})
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
+    async getMaintenanceMachineBySheet(req, res) {
+        const { uuid, sheet_no, uuid_request } = req.params
+        await MaintenanceMachine.findOne({
+            where: { uuid: uuid },
+            raw: true,
+        })
+            .then((machine) => {
+                _.isNull(machine) == false &&
+                    PgMowMtn.findOne({
+                        where: {
+                            sheet_no: sheet_no,
+                        },
+                        raw: true,
+                    }).then((apSheet) => {
+                        MaintenanceRequest.findAll({
+                            where: {
+                                sheet_no: sheet_no,
+                            },
+                            raw: true,
+                        }).then((apRequest) => {
+                            MaintenanceReport.findOne({
+                                where: {
+                                    sheet_no: sheet_no,
+                                },
+                            }).then((apReport) => {
+                                MaintenanceSparepart.findAll({
+                                    where: {
+                                        mch_code: machine.mch_code,
+                                        mch_com: machine.mch_com,
+                                        item_change_date: { [Op.not]: null },
+                                    },
+                                }).then((apSparepart) => {
+                                    res.status(200).json({
+                                        machine: machine,
+                                        sheet: apSheet,
+                                        requestList: apRequest,
+                                        request:
+                                            uuid_request == 'null' ||
+                                            apRequest.length < 1
+                                                ? {
+                                                      sheet_no:
+                                                          apSheet.sheet_no,
+                                                      mch_code:
+                                                          machine.mch_code,
+                                                      mch_com: machine.mch_com,
+                                                      date_request: dayjs(),
+                                                      category_request:
+                                                          apSheet.pri_no == '01'
+                                                              ? 'Breakdown'
+                                                              : apSheet.pri_no ==
+                                                                '02'
+                                                              ? 'Still Run'
+                                                              : apSheet.pri_no ==
+                                                                '03'
+                                                              ? 'Preventive'
+                                                              : apSheet.pri_no ==
+                                                                '04'
+                                                              ? 'Workshop Still Run'
+                                                              : apSheet.pri_no ==
+                                                                '05'
+                                                              ? 'Workshop Breakdown'
+                                                              : '',
+                                                      item_stock: null,
+                                                      with_monitor: false,
+                                                  }
+                                                : _.find(apRequest, {
+                                                      uuid_request:
+                                                          uuid_request,
+                                                  }),
+                                        report:
+                                            apReport == null
+                                                ? {
+                                                      sheet_no:
+                                                          apSheet.sheet_no,
+                                                      mch_code:
+                                                          machine.mch_code,
+                                                      mch_com: machine.mch_com,
+                                                      date_report: apSheet.ymd,
+                                                      date_target: dayjs(),
+                                                      date_finish:
+                                                          apSheet.chk_date,
+                                                  }
+                                                : apReport,
+                                        sparepartList: apSparepart,
+                                    })
+                                })
+                            })
+                        })
+                    })
+            })
+            .catch((err) => {
+                res.status(500).json(err)
+            })
     },
+
+    // async getMaintenanceCategory(req, res) {
+    //     try {
+    //         const response = await MaintenanceCategory.findAll({})
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     async getMaintenanceMachineCom(req, res) {
         try {

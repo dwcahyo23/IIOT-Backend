@@ -44,6 +44,7 @@ export const MaintenanceSparepart = sequelize.define('MaintenanceSparepart', {
     item_name: DataTypes.STRING(50),
     item_life_time: DataTypes.INTEGER,
     item_lead_time: DataTypes.INTEGER,
+    sheet_no: DataTypes.STRING,
     item_change_date: {
         type: DataTypes.JSON,
         get: function () {
@@ -113,15 +114,28 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     item_stock: DataTypes.STRING,
     item_qty: DataTypes.INTEGER,
     item_uom: DataTypes.STRING(10),
-    item_ready: DataTypes.STRING,
-    audit_request: DataTypes.STRING(8),
+    item_ready: {
+        type: DataTypes.STRING(1),
+        defaultValue: 'N',
+    },
+    audit_request: {
+        type: DataTypes.STRING(1),
+        defaultValue: 'N',
+    },
     date_audit_request: DataTypes.DATE,
     date_ready_request: DataTypes.DATE,
     date_mre_request: DataTypes.DATE,
-    mre_request: DataTypes.STRING,
-    sts_wa1: DataTypes.STRING,
-    sts_wa2: DataTypes.STRING,
-    sts_wa3: DataTypes.STRING,
+    mre_request: {
+        type: DataTypes.STRING,
+        defaultValue: '',
+    },
+    sts_wa1: DataTypes.STRING(1),
+    sts_wa2: DataTypes.STRING(1),
+    sts_wa3: DataTypes.STRING(1),
+    with_monitor: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 })
 
 export const MaintenanceReport = sequelize.define('MaintenanceReport', {

@@ -5,9 +5,10 @@ export default (app) => {
     app.get('/maintenanceSystem', Mn.getMaintenanceSystem)
     app.get('/userData', Mn.getUser)
     app.get('/maintenanceMachine/:uuid', Mn.getMaintenanceMachineBy)
+
     app.get('/maintenanceMachineOne/:uuid', Mn.getMaintenanceMachineByOne)
     app.get('/maintenanceMachine', Mn.getMaintenanceMachine)
-    app.get('/maintenanceCategory', Mn.getMaintenanceCategory)
+    // app.get('/maintenanceCategory', Mn.getMaintenanceCategory)
     app.get('/maintenanceMachineCom', Mn.getMaintenanceMachineCom)
     app.get('/maintenanceMachineProcess', Mn.getMaintenanceMachineProcess)
     app.get('/maintenanceControlStock', Mn.getMaintenanceControlStock)
@@ -21,8 +22,9 @@ export default (app) => {
     app.post('/maintenanceSparepart', Mn.insMaintenanceSparepart)
     app.post('/maintenanceReport', Mn.insMaintenanceReport)
     app.post('/maintenanceWorkshopReport', Mn.instMaintenanceBulkWorkshopReport)
-    app.post('/maintenanceRequest', Mn.insMaintenanceRequest)
-    app.post('/maintenanceCategory', Mn.insMaintenanceCategory)
+    // app.post('/maintenanceRequest', Mn.insMaintenanceRequest)
+
+    // app.post('/maintenanceCategory', Mn.insMaintenanceCategory)
     app.post('/maintenanceControlStock', Mn.instMaintenanceControlStock)
 
     app.post('/maintenanceMachine', Mn.insMaintenanceMachine)
@@ -32,8 +34,17 @@ export default (app) => {
         Mn.updateStockMaintenanceControlStock
     )
     app.post('/maintenanceControlStockB', Mn.instMaintenanceBulkControllStock)
-    app.post('/maintenanceSparepartBulk', Mn.insMaintenanceSparepartBulkFind)
+
     app.post('/maintenanceReportB', Mn.instMaintenanceBulkReport)
     app.post('/maintenanceRequestB', Mn.instMaintenanceBulkRequest)
+
+    //Menu dashboard dialog AP-User
+    app.post('/maintenanceSparepartBulk', Mn.insMaintenanceSparepartBulkFind)
+    app.post('/maintenanceRequest/:options/:user', Mn.handleMaintenanceRequest)
+
     app.get('/maintenanceDashboard/:com/:section', Mn.dashboardMN)
+    app.get(
+        '/machineSheet/:uuid/:sheet_no/:uuid_request',
+        Mn.getMaintenanceMachineBySheet
+    )
 }
