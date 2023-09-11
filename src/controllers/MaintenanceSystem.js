@@ -1,4 +1,4 @@
-import { Op, Sequelize, where } from 'sequelize'
+import { Op, Sequelize, json, where } from 'sequelize'
 import {
     MaintenanceMachine,
     MaintenanceCategory,
@@ -41,272 +41,272 @@ MaintenanceSparepart.belongsTo(MaintenanceMachine, {
 export default {
     //--- for dev bulk post  ---
 
-    async insMaintenanceMachine(req, res) {
-        const machine = req.body
-        try {
-            const response = await MaintenanceMachine.bulkCreate(
-                machine,
-                { validate: true },
-                {
-                    fields: [
-                        'mch_code',
-                        'mch_name',
-                        'mch_process',
-                        'mch_process_type',
-                        'mch_com',
-                        'mch_loc',
-                        'mch_prod',
-                        'mch_maker',
-                        'responsible',
-                        'mch_hp',
-                        'memo',
-                    ],
-                }
-            )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async insMaintenanceMachine(req, res) {
+    //     const machine = req.body
+    //     try {
+    //         const response = await MaintenanceMachine.bulkCreate(
+    //             machine,
+    //             { validate: true },
+    //             {
+    //                 fields: [
+    //                     'mch_code',
+    //                     'mch_name',
+    //                     'mch_process',
+    //                     'mch_process_type',
+    //                     'mch_com',
+    //                     'mch_loc',
+    //                     'mch_prod',
+    //                     'mch_maker',
+    //                     'responsible',
+    //                     'mch_hp',
+    //                     'memo',
+    //                 ],
+    //             }
+    //         )
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async updateMaintenanceMachine(req, res) {
-        const machine = req.body
-        try {
-            _.forEach(machine, async (val) => {
-                await MaintenanceMachine.findOne({
-                    where: { uuid: val.uuid, mch_code: val.mch_code },
-                })
-                    .then((obj) => {
-                        if (obj) {
-                            MaintenanceMachine.update(
-                                { ...val },
-                                {
-                                    where: { uuid: val.uuid },
-                                }
-                            )
-                            return res.end()
-                        } else {
-                            return res.end()
-                        }
-                    })
-                    .catch((error) => console.log(error))
-            })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async updateMaintenanceMachine(req, res) {
+    //     const machine = req.body
+    //     try {
+    //         _.forEach(machine, async (val) => {
+    //             await MaintenanceMachine.findOne({
+    //                 where: { uuid: val.uuid, mch_code: val.mch_code },
+    //             })
+    //                 .then((obj) => {
+    //                     if (obj) {
+    //                         MaintenanceMachine.update(
+    //                             { ...val },
+    //                             {
+    //                                 where: { uuid: val.uuid },
+    //                             }
+    //                         )
+    //                         return res.end()
+    //                     } else {
+    //                         return res.end()
+    //                     }
+    //                 })
+    //                 .catch((error) => console.log(error))
+    //         })
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async instMaintenanceBulkReport(req, res) {
-        const machine = req.body
-        try {
-            const response = await MaintenanceReport.bulkCreate(
-                machine,
-                { validate: true },
-                {
-                    fields: [
-                        'sheet_no',
-                        'mch_code',
-                        'mch_com',
-                        'date_report',
-                        'kind',
-                        'chronological',
-                        'corrective',
-                        'prevention',
-                        'user_rep1',
-                        'user_rep2',
-                        'date_target',
-                        'date_finish',
-                        'audit_report',
-                    ],
-                }
-            )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async instMaintenanceBulkReport(req, res) {
+    //     const machine = req.body
+    //     try {
+    //         const response = await MaintenanceReport.bulkCreate(
+    //             machine,
+    //             { validate: true },
+    //             {
+    //                 fields: [
+    //                     'sheet_no',
+    //                     'mch_code',
+    //                     'mch_com',
+    //                     'date_report',
+    //                     'kind',
+    //                     'chronological',
+    //                     'corrective',
+    //                     'prevention',
+    //                     'user_rep1',
+    //                     'user_rep2',
+    //                     'date_target',
+    //                     'date_finish',
+    //                     'audit_report',
+    //                 ],
+    //             }
+    //         )
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async instMaintenanceBulkRequest(req, res) {
-        const machine = req.body
-        try {
-            const response = await MaintenanceRequest.bulkCreate(machine, {
-                validate: true,
-            })
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async instMaintenanceBulkRequest(req, res) {
+    //     const machine = req.body
+    //     try {
+    //         const response = await MaintenanceRequest.bulkCreate(machine, {
+    //             validate: true,
+    //         })
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async instMaintenanceBulkWorkshopReport(req, res) {
-        const data = req.body
-        try {
-            const response = await MaintenanceWorkshopReport.bulkCreate(data, {
-                validate: true,
-            })
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async instMaintenanceBulkWorkshopReport(req, res) {
+    //     const data = req.body
+    //     try {
+    //         const response = await MaintenanceWorkshopReport.bulkCreate(data, {
+    //             validate: true,
+    //         })
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async insMaintenanceSparepartBulkFind(req, res) {
-        try {
-            const sparepart = req.body
-            _.forEach(sparepart, async (val, index) => {
-                const boms = await MaintenanceSparepart.findAll({
-                    where: {
-                        mch_code: val.mch_code,
-                        category: val.category,
-                        item_change_date: { [Op.not]: null },
-                    },
-                })
+    // async insMaintenanceSparepartBulkFind(req, res) {
+    //     try {
+    //         const sparepart = req.body
+    //         _.forEach(sparepart, async (val, index) => {
+    //             const boms = await MaintenanceSparepart.findAll({
+    //                 where: {
+    //                     mch_code: val.mch_code,
+    //                     category: val.category,
+    //                     item_change_date: { [Op.not]: null },
+    //                 },
+    //             })
 
-                if (boms.length < 1) {
-                    const bom = `${val.category}${val.mch_code.replace(
-                        /\-/g,
-                        ''
-                    )}-${1001 + boms.length}`
-                    const response = await MaintenanceSparepart.create({
-                        ...val,
-                        bom: bom,
-                    })
-                    return res.end()
-                } else {
-                    const bom = `${val.category}${val.mch_code.replace(
-                        /\-/g,
-                        ''
-                    )}-${1001 + boms.length}`
-                    const response = await MaintenanceSparepart.create({
-                        ...val,
-                        bom: bom,
-                    })
+    //             if (boms.length < 1) {
+    //                 const bom = `${val.category}${val.mch_code.replace(
+    //                     /\-/g,
+    //                     ''
+    //                 )}-${1001 + boms.length}`
+    //                 const response = await MaintenanceSparepart.create({
+    //                     ...val,
+    //                     bom: bom,
+    //                 })
+    //                 return res.end()
+    //             } else {
+    //                 const bom = `${val.category}${val.mch_code.replace(
+    //                     /\-/g,
+    //                     ''
+    //                 )}-${1001 + boms.length}`
+    //                 const response = await MaintenanceSparepart.create({
+    //                     ...val,
+    //                     bom: bom,
+    //                 })
 
-                    return res.end()
-                }
-            })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    //                 return res.end()
+    //             }
+    //         })
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async instMaintenanceBulkControllStock(req, res) {
-        const data = req.body
-        try {
-            const response = await MaintenanceSparepartControlStcok.bulkCreate(
-                data,
-                {
-                    validate: true,
-                },
-                {
-                    fields: [
-                        'uuid',
-                        'sparepart_name',
-                        'op_qty',
-                        'uom_op',
-                        'oq_qty',
-                        'uom_oq',
-                        'stock_qty',
-                        'uom_stock',
-                        'sparepart_category',
-                        'lead_time',
-                        'no_pr',
-                    ],
-                }
-            )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async instMaintenanceBulkControllStock(req, res) {
+    //     const data = req.body
+    //     try {
+    //         const response = await MaintenanceSparepartControlStcok.bulkCreate(
+    //             data,
+    //             {
+    //                 validate: true,
+    //             },
+    //             {
+    //                 fields: [
+    //                     'uuid',
+    //                     'sparepart_name',
+    //                     'op_qty',
+    //                     'uom_op',
+    //                     'oq_qty',
+    //                     'uom_oq',
+    //                     'stock_qty',
+    //                     'uom_stock',
+    //                     'sparepart_category',
+    //                     'lead_time',
+    //                     'no_pr',
+    //                 ],
+    //             }
+    //         )
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     //---- end of bulk post ---
 
-    async insMaintenanceSparepart(req, res) {
-        try {
-            const sparepart = req.body
-            const boms = await MaintenanceSparepart.findAll({
-                where: {
-                    mch_code: sparepart.mch_code,
-                    category: sparepart.category,
-                    item_change_date: { [Op.not]: null },
-                },
-            })
+    // async insMaintenanceSparepart(req, res) {
+    //     try {
+    //         const sparepart = req.body
+    //         const boms = await MaintenanceSparepart.findAll({
+    //             where: {
+    //                 mch_code: sparepart.mch_code,
+    //                 category: sparepart.category,
+    //                 item_change_date: { [Op.not]: null },
+    //             },
+    //         })
 
-            if (boms.length < 1) {
-                const bom = `${
-                    sparepart.category
-                }${sparepart.mch_code.value.replace(/\-/g, '')}-${
-                    1001 + boms.length
-                }`
-                const response = await MaintenanceSparepart.bulkCreate(
-                    { ...sparepart, bom: bom },
-                    { validate: true },
-                    {
-                        fields: [
-                            'mch_code',
-                            'mch_com',
-                            'slug',
-                            'bom',
-                            'category',
-                            'item_name',
-                            'item_life_time',
-                            'item_lead_time',
-                        ],
-                    }
-                )
-                return res.status(200).json(response)
-            } else {
-                const bom = `${
-                    sparepart.category
-                }${sparepart.mch_code.value.replace(/\-/g, '')}-${
-                    1001 + boms.length
-                }`
-                const response = await MaintenanceSparepart.bulkCreate(
-                    { ...sparepart, bom: bom },
-                    { validate: true },
-                    {
-                        fields: [
-                            'mch_code',
-                            'mch_com',
-                            'slug',
-                            'bom',
-                            'category',
-                            'item_name',
-                            'item_life_time',
-                            'item_lead_time',
-                        ],
-                    }
-                )
-                return res.status(200).json(response)
-            }
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    //         if (boms.length < 1) {
+    //             const bom = `${
+    //                 sparepart.category
+    //             }${sparepart.mch_code.value.replace(/\-/g, '')}-${
+    //                 1001 + boms.length
+    //             }`
+    //             const response = await MaintenanceSparepart.bulkCreate(
+    //                 { ...sparepart, bom: bom },
+    //                 { validate: true },
+    //                 {
+    //                     fields: [
+    //                         'mch_code',
+    //                         'mch_com',
+    //                         'slug',
+    //                         'bom',
+    //                         'category',
+    //                         'item_name',
+    //                         'item_life_time',
+    //                         'item_lead_time',
+    //                     ],
+    //                 }
+    //             )
+    //             return res.status(200).json(response)
+    //         } else {
+    //             const bom = `${
+    //                 sparepart.category
+    //             }${sparepart.mch_code.value.replace(/\-/g, '')}-${
+    //                 1001 + boms.length
+    //             }`
+    //             const response = await MaintenanceSparepart.bulkCreate(
+    //                 { ...sparepart, bom: bom },
+    //                 { validate: true },
+    //                 {
+    //                     fields: [
+    //                         'mch_code',
+    //                         'mch_com',
+    //                         'slug',
+    //                         'bom',
+    //                         'category',
+    //                         'item_name',
+    //                         'item_life_time',
+    //                         'item_lead_time',
+    //                     ],
+    //                 }
+    //             )
+    //             return res.status(200).json(response)
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
-    async insMaintenanceStock(req, res) {
-        const data = req.body
-        try {
-            const response = await MaintenanceStock.bulkCreate(
-                data,
-                { validate: true },
-                { fields: ['mat_no', 'mat_name', 'grade'] }
-            )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    // async insMaintenanceStock(req, res) {
+    //     const data = req.body
+    //     try {
+    //         const response = await MaintenanceStock.bulkCreate(
+    //             data,
+    //             { validate: true },
+    //             { fields: ['mat_no', 'mat_name', 'grade'] }
+    //         )
+    //         return res.status(200).json(response)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     // async insMaintenanceCategory(req, res) {
     //     const category = req.body
@@ -479,6 +479,8 @@ export default {
                         item_life_time: sparepart.item_life_time,
                         item_lead_time: sparepart.item_lead_time,
                         item_name: request.item_stock,
+                        item_change_date: [dayjs()],
+                        remarks: sparepart.remarks,
                         sheet_no: uuid_request,
                     })
                         .then(() =>
@@ -502,12 +504,58 @@ export default {
                         item_life_time: sparepart.item_life_time,
                         item_lead_time: sparepart.item_lead_time,
                         item_name: request.item_stock,
+                        item_change_date: [dayjs()],
+                        remarks: sparepart.remarks,
                         sheet_no: uuid_request,
                     })
                         .then(() =>
                             res
                                 .status(200)
                                 .json({ message: 'Data updated successfully' })
+                        )
+                        .catch((err) => res.status(500).json(err))
+                }
+            } else if (options == 'regenerateLifeTime') {
+                const { regenerate } = dataRow
+                const initVal = await MaintenanceSparepart.findOne({
+                    where: {
+                        uuid: regenerate,
+                    },
+                    raw: true,
+                })
+
+                if (initVal != null) {
+                    const { item_change_date, item_life_time } = initVal
+
+                    let newChangeDate = [
+                        dayjs(),
+                        ...JSON.parse(item_change_date),
+                    ]
+
+                    let toTimestamp = newChangeDate.map((val) =>
+                        dayjs(val).unix()
+                    )
+
+                    let toDiff = toTimestamp
+                        .slice(1)
+                        .map((e, i) => toTimestamp[i] - toTimestamp[i + 1])
+
+                    let toAvg =
+                        toDiff.reduce((a, b) => a + b, 0) / toDiff.length / 3600
+
+                    // res.status(200).json(toAvg.toFixed(2) * 1)
+
+                    MaintenanceSparepart.update(
+                        {
+                            item_life_time: toAvg.toFixed(2) * 1,
+                            item_change_date: newChangeDate,
+                        },
+                        { where: { uuid: regenerate } }
+                    )
+                        .then(() =>
+                            res
+                                .status(200)
+                                .json({ message: 'Data canceled successfully' })
                         )
                         .catch((err) => res.status(500).json(err))
                 }
@@ -749,45 +797,45 @@ export default {
         }
     },
 
-    async getMaintenanceMachineByOne(req, res) {
-        try {
-            const getId = await MaintenanceMachine.findOne({
-                where: { uuid: req.params.uuid },
-            })
+    // async getMaintenanceMachineByOne(req, res) {
+    //     try {
+    //         const getId = await MaintenanceMachine.findOne({
+    //             where: { uuid: req.params.uuid },
+    //         })
 
-            const report = await MaintenanceReport.findAll({
-                where: {
-                    mch_code: getId.mch_code,
-                    mch_com: getId.mch_com,
-                },
-                order: [['sheet_no', 'DESC']],
-            })
+    //         const report = await MaintenanceReport.findAll({
+    //             where: {
+    //                 mch_code: getId.mch_code,
+    //                 mch_com: getId.mch_com,
+    //             },
+    //             order: [['sheet_no', 'DESC']],
+    //         })
 
-            const request = await MaintenanceRequest.findAll({
-                where: {
-                    mch_code: getId.mch_code,
-                    mch_com: getId.mch_com,
-                },
-                order: [['sheet_no', 'DESC']],
-            })
+    //         const request = await MaintenanceRequest.findAll({
+    //             where: {
+    //                 mch_code: getId.mch_code,
+    //                 mch_com: getId.mch_com,
+    //             },
+    //             order: [['sheet_no', 'DESC']],
+    //         })
 
-            if (!request || !report) {
-                return res.status(200).json({
-                    ...getId.dataValues,
-                    report: report,
-                    request: request,
-                })
-            }
-            return res.status(200).json({
-                ...getId.dataValues,
-                report: report,
-                request: request,
-            })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    //         if (!request || !report) {
+    //             return res.status(200).json({
+    //                 ...getId.dataValues,
+    //                 report: report,
+    //                 request: request,
+    //             })
+    //         }
+    //         return res.status(200).json({
+    //             ...getId.dataValues,
+    //             report: report,
+    //             request: request,
+    //         })
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     async getMaintenanceMachineBy(req, res) {
         try {
@@ -800,13 +848,6 @@ export default {
                     mch_no: getId.mch_code,
 
                     chk_mark: { [Op.not]: 'C' },
-                    // [Op.and]: [
-                    //     Sequelize.where(
-                    //         Sequelize.fn('date', Sequelize.col('ymd')),
-                    //         '>=',
-                    //         '2023-01-01'
-                    //     ),
-                    // ],
                 },
                 order: [['sheet_no', 'DESC']],
             })
@@ -898,7 +939,6 @@ export default {
                                     where: {
                                         mch_code: machine.mch_code,
                                         mch_com: machine.mch_com,
-                                        item_change_date: { [Op.not]: null },
                                     },
                                 }).then((apSparepart) => {
                                     res.status(200).json({
@@ -932,7 +972,6 @@ export default {
                                                               ? 'Workshop Breakdown'
                                                               : '',
                                                       item_stock: null,
-                                                      with_monitor: false,
                                                   }
                                                 : _.find(apRequest, {
                                                       uuid_request:
@@ -1061,47 +1100,47 @@ export default {
         }
     },
 
-    async pGMaintenance(req, res) {
-        try {
-            const response = await PgMowMtn.findAll({
-                where: {
-                    chk_mark: { [Op.not]: 'C' },
-                    [Op.and]: [
-                        Sequelize.where(
-                            Sequelize.fn('date', Sequelize.col('ymd')),
-                            '>=',
-                            '2023-01-01'
-                        ),
-                    ],
-                },
-                order: [['s_ymd', 'DESC']],
-            })
+    // async pGMaintenance(req, res) {
+    //     try {
+    //         const response = await PgMowMtn.findAll({
+    //             where: {
+    //                 chk_mark: { [Op.not]: 'C' },
+    //                 [Op.and]: [
+    //                     Sequelize.where(
+    //                         Sequelize.fn('date', Sequelize.col('ymd')),
+    //                         '>=',
+    //                         '2023-01-01'
+    //                     ),
+    //                 ],
+    //             },
+    //             order: [['s_ymd', 'DESC']],
+    //         })
 
-            const mch = await MaintenanceMachine.findAll({})
+    //         const mch = await MaintenanceMachine.findAll({})
 
-            const result = _.map(response, (val) => {
-                return {
-                    ...val.dataValues,
-                    mch_index: _.find(mch, {
-                        mch_code: val.mch_no,
-                        mch_com:
-                            val.com_no == '01'
-                                ? 'GM1'
-                                : val.com_no == '02'
-                                ? 'GM2'
-                                : val.com_no == '03'
-                                ? 'GM3'
-                                : 'GM5',
-                    }),
-                }
-            })
+    //         const result = _.map(response, (val) => {
+    //             return {
+    //                 ...val.dataValues,
+    //                 mch_index: _.find(mch, {
+    //                     mch_code: val.mch_no,
+    //                     mch_com:
+    //                         val.com_no == '01'
+    //                             ? 'GM1'
+    //                             : val.com_no == '02'
+    //                             ? 'GM2'
+    //                             : val.com_no == '03'
+    //                             ? 'GM3'
+    //                             : 'GM5',
+    //                 }),
+    //             }
+    //         })
 
-            res.status(200).json(result)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
-        }
-    },
+    //         res.status(200).json(result)
+    //     } catch (error) {
+    //         console.log(error)
+    //         res.status(500).json(error)
+    //     }
+    // },
 
     async dashboardMN(req, res) {
         const com = req.params.com

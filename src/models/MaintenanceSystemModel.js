@@ -42,11 +42,13 @@ export const MaintenanceSparepart = sequelize.define('MaintenanceSparepart', {
     bom: DataTypes.STRING(15),
     category: DataTypes.STRING(3),
     item_name: DataTypes.STRING(50),
-    item_life_time: DataTypes.INTEGER,
-    item_lead_time: DataTypes.INTEGER,
+    item_life_time: DataTypes.FLOAT,
+    item_lead_time: DataTypes.FLOAT,
     sheet_no: DataTypes.STRING,
+    remarks: DataTypes.STRING,
     item_change_date: {
         type: DataTypes.JSON,
+        defaultValue: [],
         get: function () {
             if (typeof this.getDataValue('item_change_date') == 'string') {
                 return JSON.parse(this.getDataValue('item_change_date'))
