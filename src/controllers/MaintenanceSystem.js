@@ -430,13 +430,29 @@ export default {
                     )
                     .catch((err) => res.status(500).json(err))
             } else if (options == 'save') {
-                MaintenanceRequest.create(dataRow, { validate: true })
-                    .then(() =>
-                        res
-                            .status(200)
-                            .json({ message: 'Data saved successfully' })
+                if (dataRow?.new_sparepart) {
+                    MaintenanceRequest.create(
+                        { ...dataRow, item_stock: dataRow.new_sparepart },
+                        { validate: true }
                     )
-                    .catch((err) => res.status(500).json(err))
+                        .then(() => {
+                            MaintenanceStock.create({
+                                mat_name: dataRow.new_sparepart,
+                            })
+                            res.status(200).json({
+                                message: 'Data saved successfully',
+                            })
+                        })
+                        .catch((err) => res.status(500).json(err))
+                } else {
+                    MaintenanceRequest.create(dataRow, { validate: true })
+                        .then(() =>
+                            res
+                                .status(200)
+                                .json({ message: 'Data saved successfully' })
+                        )
+                        .catch((err) => res.status(500).json(err))
+                }
             } else if (_.includes(options, 'MRE')) {
                 let uuid_request = dataRow.map((data) => data.uuid_request)
                 MaintenanceRequest.update(
