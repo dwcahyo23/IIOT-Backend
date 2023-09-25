@@ -159,6 +159,12 @@ export const MaintenanceReport = sequelize.define('MaintenanceReport', {
     date_target: DataTypes.DATE,
     date_finish: DataTypes.DATE,
     audit_report: DataTypes.STRING,
+    feedback_score: {
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
+    },
+    feedback_note: DataTypes.STRING,
+    feedback_user: DataTypes.STRING,
 })
 
 export const MaintenanceWorkshopReport = sequelize.define(

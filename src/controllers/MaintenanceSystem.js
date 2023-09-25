@@ -326,6 +326,7 @@ export default {
     async insMaintenanceReport(req, res) {
         try {
             const data = req.body
+            console.log(data)
             const find = await MaintenanceReport.findOne({
                 where: { sheet_no: req.body.sheet_no },
             })
@@ -335,16 +336,7 @@ export default {
                         sheet_no: req.body.sheet_no,
                         ...data,
                     },
-                    { validate: true },
-                    {
-                        fields: [
-                            'mch_code',
-                            'mch_com',
-                            'chronological',
-                            'corrective',
-                            'prevention',
-                        ],
-                    }
+                    { validate: true }
                 )
                     .then(() => {
                         res.status(200).json(data)
@@ -1116,47 +1108,49 @@ export default {
         }
     },
 
-    // async pGMaintenance(req, res) {
-    //     try {
-    //         const response = await PgMowMtn.findAll({
-    //             where: {
-    //                 chk_mark: { [Op.not]: 'C' },
-    //                 [Op.and]: [
-    //                     Sequelize.where(
-    //                         Sequelize.fn('date', Sequelize.col('ymd')),
-    //                         '>=',
-    //                         '2023-01-01'
-    //                     ),
-    //                 ],
-    //             },
-    //             order: [['s_ymd', 'DESC']],
-    //         })
+    async pGMaintenance(req, res) {
+        try {
+            // const response = await PgMowMtn.findAll({
+            //     where: {
+            //         chk_mark: { [Op.not]: 'C' },
+            //         [Op.and]: [
+            //             Sequelize.where(
+            //                 Sequelize.fn('date', Sequelize.col('ymd')),
+            //                 '>=',
+            //                 '2023-01-01'
+            //             ),
+            //         ],
+            //     },
+            //     // order: [['s_ymd', 'DESC']],
+            // })
 
-    //         const mch = await MaintenanceMachine.findAll({})
+            const response = await AuthData.findAll({})
 
-    //         const result = _.map(response, (val) => {
-    //             return {
-    //                 ...val.dataValues,
-    //                 mch_index: _.find(mch, {
-    //                     mch_code: val.mch_no,
-    //                     mch_com:
-    //                         val.com_no == '01'
-    //                             ? 'GM1'
-    //                             : val.com_no == '02'
-    //                             ? 'GM2'
-    //                             : val.com_no == '03'
-    //                             ? 'GM3'
-    //                             : 'GM5',
-    //                 }),
-    //             }
-    //         })
+            // const mch = await MaintenanceMachine.findAll({})
 
-    //         res.status(200).json(result)
-    //     } catch (error) {
-    //         console.log(error)
-    //         res.status(500).json(error)
-    //     }
-    // },
+            // const result = _.map(response, (val) => {
+            //     return {
+            //         ...val.dataValues,
+            //         mch_index: _.find(mch, {
+            //             mch_code: val.mch_no,
+            //             mch_com:
+            //                 val.com_no == '01'
+            //                     ? 'GM1'
+            //                     : val.com_no == '02'
+            //                     ? 'GM2'
+            //                     : val.com_no == '03'
+            //                     ? 'GM3'
+            //                     : 'GM5',
+            //         }),
+            //     }
+            // })
+
+            res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
 
     async dashboardMN(req, res) {
         const com = req.params.com

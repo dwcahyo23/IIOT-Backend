@@ -23,6 +23,12 @@ export const WhatsappUser = sequelize.define(
         responsible: {
             type: DataTypes.BOOLEAN,
         },
+        with_dep_no: {
+            type: DataTypes.BOOLEAN,
+        },
+        dep_no: {
+            type: DataTypes.STRING(20),
+        },
     },
     { timestamps: false }
 )

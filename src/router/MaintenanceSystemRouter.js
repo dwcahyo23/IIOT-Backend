@@ -26,6 +26,7 @@ export default (app) => {
     app.get('/maintenanceMachineCom', Mn.getMaintenanceMachineCom)
     app.get('/maintenanceMachineProcess', Mn.getMaintenanceMachineProcess)
     app.get('/maintenanceSystem', Mn.getMaintenanceSystem)
+    app.get('/pgMaintenance', Mn.pGMaintenance)
     app.get('/maintenanceDashboard/:com/:section', Mn.dashboardMN)
     app.get('/maintenanceControlStock', Mn.getMaintenanceControlStock)
     app.get('/maintenanceMachine', Mn.getMaintenanceMachine)
