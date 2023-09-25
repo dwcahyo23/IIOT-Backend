@@ -250,7 +250,10 @@ export default {
                                             )
                                         }),
                                     }
-                                } else if (val.with_dep_no == true) {
+                                } else if (
+                                    val.responsible == false &&
+                                    val.with_dep_no == true
+                                ) {
                                     const dep_no = val.dep_no.split(',')
                                     return {
                                         ...val.dataValues,
@@ -264,7 +267,10 @@ export default {
                                             )
                                         }),
                                     }
-                                } else {
+                                } else if (
+                                    val.responsible == false &&
+                                    val.with_dep_no == false
+                                ) {
                                     return {
                                         ...val.dataValues,
                                         msg: _.filter(mapData, (mch) => {
