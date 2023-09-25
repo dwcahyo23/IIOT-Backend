@@ -236,7 +236,6 @@ export default {
 
                             const resultX = _(user).map((val) => {
                                 const matchCom = val.role.split(',')
-                                const dep_no = val.dep_no.split(',')
                                 if (val.responsible == true) {
                                     return {
                                         ...val.dataValues,
@@ -252,6 +251,7 @@ export default {
                                         }),
                                     }
                                 } else if (val.with_dep_no == true) {
+                                    const dep_no = val.dep_no.split(',')
                                     return {
                                         ...val.dataValues,
                                         msg: _.filter(mapData, (mch) => {
