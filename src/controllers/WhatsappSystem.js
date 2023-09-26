@@ -112,7 +112,10 @@ export default {
                                         )
                                     }),
                                 }
-                            } else {
+                            } else if (
+                                val.responsible == false &&
+                                val.with_dep_no == false
+                            ) {
                                 return {
                                     ...val.dataValues,
                                     msg: _.filter(mapData, (mch) => {
