@@ -1,4 +1,4 @@
-import { Op, Sequelize, where } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import {
     WhatsappUser,
     WhatsappConfig,
@@ -80,7 +80,9 @@ export default {
                     if (response) {
                         const mch = await MaintenanceMachine.findAll({})
 
-                        const user = await WhatsappUser.findAll({})
+                        const user = await WhatsappUser.findAll({
+                            where: { with_dep_no: false },
+                        })
 
                         const mapData = _.map(response, (val) => {
                             return {
@@ -112,10 +114,7 @@ export default {
                                         )
                                     }),
                                 }
-                            } else if (
-                                val.responsible == false &&
-                                val.with_dep_no == false
-                            ) {
+                            } else {
                                 return {
                                     ...val.dataValues,
                                     msg: _.filter(mapData, (mch) => {
