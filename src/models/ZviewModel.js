@@ -46,8 +46,18 @@ export const ZbConn = sequelize.define('ZbConn', {
     spm_zb_sens: DataTypes.INTEGER,
     din_zb_sens: DataTypes.INTEGER,
     init_zb_sens: DataTypes.INTEGER,
-    count_zb_sens: DataTypes.INTEGER,
-    target_zb_sens: DataTypes.INTEGER,
+    start_zb_sens: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+    count_zb_sens: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+    target_zb_sens: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
     id_production: DataTypes.STRING,
     shift_production: DataTypes.INTEGER,
     stop_reason: DataTypes.STRING,

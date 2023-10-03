@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import { Op, Sequelize, where } from 'sequelize'
 import dayjs from 'dayjs'
 import _ from 'lodash'
 import { ZbView, ZbConn, ZbSens } from '../models/ZviewModel'
@@ -28,36 +28,43 @@ export default {
     async insZbConn(req, res) {
         const data = req.body
         try {
-            _.forEach(data, (val) => {
-                const isExists = ZbConn.findOne({
+            _.forEach(data, async (val) => {
+                await ZbConn.findOne({
                     where: {
                         [Op.and]: [
                             { id_zb_sens: val.id_zb_sens },
                             { lock: false },
                         ],
                     },
+                    raw: true,
+                }).then((result) => {
+                    if (result === null) {
+                        ZbConn.create({ ...val }, { validate: true })
+                    } else {
+                        if (
+                            result.init_zb_sens !== val.init_zb_sens &&
+                            result.din_zb_sens !== val.din_zb_sens &&
+                            result.spm_zb_sens !== val.spm_zb_sens
+                        ) {
+                            ZbConn.update(
+                                { ...val },
+                                {
+                                    where: {
+                                        [Op.and]: [
+                                            { id_zb_sens: val.id_zb_sens },
+                                            { lock: false },
+                                        ],
+                                    },
+                                }
+                            )
+                        }
+                    }
                 })
-
-                if (isExists == null) {
-                    ZbConn.create(val, { validate: true })
-                        .then(() =>
-                            res.status(200).json({ message: 'success' })
-                        )
-                        .catch((err) => res.status(500).json(err))
-                } else {
-                    ZbConn.update(val, {
-                        where: {
-                            [Op.and]: [
-                                { id_zb_sens: val.id_zb_sens },
-                                { lock: false },
-                            ],
-                        },
-                    })
-                }
             })
+            res.status(200).json({ message: 'success' })
         } catch (error) {
             console.log(error)
-            res.status(500).json(error)
+            res.status(500).json({ error })
         }
     },
     async upZbconn(req, res) {
@@ -107,15 +114,16 @@ export default {
             const zbView = await ZbView.findAll({ raw: true })
             const machine = await MaintenanceMachine.findAll({ raw: true })
 
-            const comb = _.map(zbConn, (val) => {
+            const comb = _.map(zbSens, (val) => {
                 return {
                     ...val,
-                    zbSens: _.find(zbSens, { id: val.id_zb_sens }),
+                    zbConn: _.find(zbConn, { id_zb_sens: val.id }) || null,
                     zbView: _.find(zbView, { id: val.id_zb_view }),
-                    machine: _.find(machine, {
-                        mch_code: val.mch_code,
-                        mch_com: val.mch_com,
-                    }),
+                    machine:
+                        _.find(machine, {
+                            mch_code: val.mch_code,
+                            mch_com: val.mch_com,
+                        }) || null,
                 }
             })
 
