@@ -39,25 +39,26 @@ export default {
                     raw: true,
                 }).then((result) => {
                     if (result === null) {
+                        console.log(result)
                         ZbConn.create({ ...val }, { validate: true })
                     } else {
-                        if (
-                            result.init_zb_sens !== val.init_zb_sens &&
-                            result.din_zb_sens !== val.din_zb_sens &&
-                            result.spm_zb_sens !== val.spm_zb_sens
-                        ) {
-                            ZbConn.update(
-                                { ...val },
-                                {
-                                    where: {
-                                        [Op.and]: [
-                                            { id_zb_sens: val.id_zb_sens },
-                                            { lock: false },
-                                        ],
-                                    },
-                                }
-                            )
-                        }
+                        const count_zb_sens =
+                            result.start_zb_sens !== 0
+                                ? val.init_zb_sens * 1 -
+                                  result.start_zb_sens * 1
+                                : 0
+
+                        ZbConn.update(
+                            { ...val, count_zb_sens },
+                            {
+                                where: {
+                                    [Op.and]: [
+                                        { id_zb_sens: val.id_zb_sens },
+                                        { lock: false },
+                                    ],
+                                },
+                            }
+                        )
                     }
                 })
             })
