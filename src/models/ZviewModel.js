@@ -66,3 +66,22 @@ export const ZbConn = sequelize.define('ZbConn', {
         defaultValue: false,
     },
 })
+
+export const ZbLog = sequelize.define('ZbLog', {
+    uuid: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+    },
+    id_zb_conn: DataTypes.STRING,
+    stop_reason: DataTypes.STRING,
+    start: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+    },
+    stop: DataTypes.DATE,
+    lock: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+})

@@ -15,6 +15,7 @@ dotenv.config()
 const app = express()
 app.use(
     cors({
+        origin: '*',
         methods: ['GET', 'POST', 'DELETE'],
         allowedHeaders: ['Authorization', 'Content-Type'],
     })

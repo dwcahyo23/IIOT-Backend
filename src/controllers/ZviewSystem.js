@@ -1,7 +1,7 @@
 import { Op, Sequelize, where } from 'sequelize'
 import dayjs from 'dayjs'
 import _ from 'lodash'
-import { ZbView, ZbConn, ZbSens } from '../models/ZviewModel'
+import { ZbView, ZbConn, ZbSens, ZbLog } from '../models/ZviewModel'
 import { MaintenanceMachine } from '../models/MaintenanceSystemModel'
 
 export default {
@@ -48,6 +48,7 @@ export default {
                                   result.start_zb_sens * 1
                                 : 0
 
+                        //--for update form
                         ZbConn.update(
                             { ...val, count_zb_sens },
                             {
@@ -59,6 +60,46 @@ export default {
                                 },
                             }
                         )
+                        //--end update form
+
+                        //--for update zblog
+                        if (_.isUndefined(val.stop_reason) == false) {
+                            ZbLog.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        { id_zb_conn: result.uuid },
+                                        { lock: false },
+                                    ],
+                                },
+                                raw: true,
+                            }).then((logResult) => {
+                                if (logResult === null) {
+                                    ZbLog.create({
+                                        id_zb_conn: result.uuid,
+                                        stop_reason: val.stop_reason,
+                                        lock: false,
+                                    })
+                                } else {
+                                    ZbLog.update(
+                                        { stop: dayjs(), lock: true },
+                                        {
+                                            where: {
+                                                [Op.and]: [
+                                                    { uuid: logResult.uuid },
+                                                ],
+                                            },
+                                        }
+                                    ).then(() => {
+                                        ZbLog.create({
+                                            id_zb_conn: result.uuid,
+                                            stop_reason: val.stop_reason,
+                                            lock: false,
+                                        })
+                                    })
+                                }
+                            })
+                        }
+                        //--end update zblog
                     }
                 })
             })
@@ -114,11 +155,25 @@ export default {
             const zbSens = await ZbSens.findAll({ raw: true })
             const zbView = await ZbView.findAll({ raw: true })
             const machine = await MaintenanceMachine.findAll({ raw: true })
+            const zbLog = await ZbLog.findAll({
+                raw: true,
+                order: [['createdAt', 'DESC']],
+            })
 
             const comb = _.map(zbSens, (val) => {
                 return {
                     ...val,
                     zbConn: _.find(zbConn, { id_zb_sens: val.id }) || null,
+                    zbLog:
+                        _.isObject(_.find(zbConn, { id_zb_sens: val.id })) ===
+                        true
+                            ? _.filter(zbLog, {
+                                  id_zb_conn: _.find(zbConn, {
+                                      id_zb_sens: val.id,
+                                  }).uuid,
+                              })
+                            : [],
+
                     zbView: _.find(zbView, { id: val.id_zb_view }),
                     machine:
                         _.find(machine, {
