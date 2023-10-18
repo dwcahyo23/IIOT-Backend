@@ -61,6 +61,7 @@ export const ZbConn = sequelize.define('ZbConn', {
     id_production: DataTypes.STRING,
     shift_production: DataTypes.INTEGER,
     stop_reason: DataTypes.STRING,
+    timeoff: DataTypes.STRING,
     lock: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
