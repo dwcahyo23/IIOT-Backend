@@ -9,6 +9,7 @@ import ModbusAppRouter from './router/ModbusAppRouter.js'
 import MaintenanceSystemRouter from './router/MaintenanceSystemRouter.js'
 import WhatsappRouter from './router/WhatsappRouter.js'
 import ZviewRouter from './router/ZviewRouter.js'
+import QuestRouter from './router/QuestRouter.js'
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ MaintenanceSystemRouter(app)
 Genba(app)
 WhatsappRouter(app)
 ZviewRouter(app)
+QuestRouter(app)
 
 app.listen(process.env.PORT_APP, () =>
     console.log(`Server up & running in ${process.env.PORT_APP}`)
