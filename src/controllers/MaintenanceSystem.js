@@ -486,7 +486,10 @@ export default {
                         category: sparepart.category,
                         item_life_time: sparepart.item_life_time,
                         item_lead_time: sparepart.item_lead_time,
-                        item_name: request.item_stock,
+                        item_name:
+                            request.item_stock == '#0 ADD NEW ITEM'
+                                ? request.new_sparepart
+                                : request.item_stock,
                         item_change_date: [dayjs()],
                         remarks: sparepart.remarks,
                         sheet_no: uuid_request,
@@ -511,7 +514,10 @@ export default {
                         category: sparepart.category,
                         item_life_time: sparepart.item_life_time,
                         item_lead_time: sparepart.item_lead_time,
-                        item_name: request.item_stock,
+                        item_name:
+                            request.item_stock == '#0 ADD NEW ITEM'
+                                ? request.new_sparepart
+                                : request.item_stock,
                         item_change_date: [dayjs()],
                         remarks: sparepart.remarks,
                         sheet_no: uuid_request,
