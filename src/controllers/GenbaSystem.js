@@ -8,18 +8,21 @@ export default {
         const data = req.body
         try {
             const findOne = await GenbaAcip.findOne({
-                where: { id_genba: req.params.id },
+                where: { sheet: req.params.id },
             })
 
             if (findOne == null) {
-                const response = GenbaAcip.create({
+                GenbaAcip.create({
                     ...data,
-                    id_genba: req.params.id,
-                })
-                return res.status(200).json(response)
+                    sheet: req.params.id,
+                }).then(() =>
+                    GenbaAcip.findOne({
+                        where: { sheet: req.params.id },
+                    }).then((x) => res.status(200).json(x.sheet))
+                )
             } else {
                 const response = GenbaAcip.update(data, {
-                    where: { id_genba: req.params.id },
+                    where: { sheet: req.params.id },
                 })
                 return res.status(200).json(response)
             }
