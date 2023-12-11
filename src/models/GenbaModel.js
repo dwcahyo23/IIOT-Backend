@@ -9,6 +9,10 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
         type: DataTypes.STRING,
         primaryKey: true,
     },
+    sheet: {
+        type: DataTypes.STRING(8),
+        defaultValue: DataTypes.UUIDV4,
+    },
     from: DataTypes.STRING,
     dept: DataTypes.STRING,
     area: DataTypes.STRING,

@@ -21,6 +21,7 @@ export default (app) => {
     // app.post('/maintenanceSparepartBulk',verifyToken, Mn.insMaintenanceSparepartBulkFind)
 
     //!@get
+    app.get('/maintenanceUser', Mn.getMaintenanceUser)
     app.get(
         '/maintenanceMachine/:uuid',
         verifyToken,

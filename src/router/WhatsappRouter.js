@@ -5,4 +5,5 @@ export default (app) => {
     app.post('/userWhatsapp', WhatsappSystem.insUser)
     app.get('/newsWorderOpen', WhatsappSystem.worderTodayOpen)
     app.get('/newsWorderClose', WhatsappSystem.worderTodayClose)
+    app.get('newsLog', WhatsappSystem.getLog)
 }

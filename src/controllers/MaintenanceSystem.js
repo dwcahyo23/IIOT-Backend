@@ -8,6 +8,7 @@ import {
     MaintenanceSparepart,
     MaintenanceSparepartControlStcok,
     MaintenanceWorkshopReport,
+    MaintenanceUser,
 } from '../models/MaintenanceSystemModel'
 import { AuthData } from '../models/AuthModel'
 import { GenbaAcip } from '../models/GenbaModel'
@@ -1015,6 +1016,16 @@ export default {
             .catch((err) => {
                 res.status(500).json(err)
             })
+    },
+
+    async getMaintenanceUser(req, res) {
+        try {
+            const response = await MaintenanceUser.findAll({})
+            res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
     },
 
     // async getMaintenanceCategory(req, res) {

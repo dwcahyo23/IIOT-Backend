@@ -338,4 +338,14 @@ export default {
             res.status(500).json(error)
         }
     },
+
+    async getLog(req, res) {
+        try {
+            const response = await WhatsappLog.findAll({})
+            res.status(200).json(response)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error)
+        }
+    },
 }

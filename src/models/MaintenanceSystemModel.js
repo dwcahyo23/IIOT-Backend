@@ -229,3 +229,16 @@ export const MaintenanceSparepartControlStcok = sequelize.define(
         no_pr: DataTypes.STRING,
     }
 )
+
+export const MaintenanceUser = sequelize.define(
+    'MaintenanceUser',
+    {
+        uuid: {
+            type: DataTypes.STRING(9),
+            primaryKey: true,
+        },
+        mn_name: DataTypes.STRING,
+        mn_com: DataTypes.STRING,
+    },
+    { timestamps: false }
+)
