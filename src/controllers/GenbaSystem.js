@@ -8,7 +8,7 @@ export default {
         const data = req.body
         try {
             const findOne = await GenbaAcip.findOne({
-                where: { sheet: req.params.id },
+                where: { id_genba: req.params.id },
             })
 
             if (findOne == null) {
