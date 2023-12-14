@@ -18,7 +18,7 @@ export default {
                 }).then(() =>
                     GenbaAcip.findOne({
                         where: { id_genba: req.params.id },
-                    }).then((x) => res.status(200).json(x.id_genba))
+                    }).then((x) => res.status(200).json(x.sheet))
                 )
             } else {
                 const response = GenbaAcip.update(data, {
@@ -39,7 +39,7 @@ export default {
         })
             .then(() =>
                 GenbaAcip.findOne({
-                    where: { id_genba: req.params.id },
+                    where: { sheet: req.params.id },
                 }).then((x) => res.status(200).json(x.id_genba))
             )
             .catch((error) => res.status(500).send(error.message))

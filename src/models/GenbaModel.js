@@ -12,6 +12,7 @@ export const GenbaAcip = sequelize.define('GenbaAcip', {
     sheet: {
         type: DataTypes.STRING(8),
         defaultValue: DataTypes.UUIDV4,
+        unique: true,
     },
     from: DataTypes.STRING,
     dept: DataTypes.STRING,
