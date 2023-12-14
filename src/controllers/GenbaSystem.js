@@ -14,15 +14,15 @@ export default {
             if (findOne == null) {
                 GenbaAcip.create({
                     ...data,
-                    sheet: req.params.id,
+                    id_genba: req.params.id,
                 }).then(() =>
                     GenbaAcip.findOne({
-                        where: { sheet: req.params.id },
-                    }).then((x) => res.status(200).json(x.sheet))
+                        where: { id_genba: req.params.id },
+                    }).then((x) => res.status(200).json(x.id_genba))
                 )
             } else {
                 const response = GenbaAcip.update(data, {
-                    where: { sheet: req.params.id },
+                    where: { id_genba: req.params.id },
                 })
                 return res.status(200).json(response)
             }
@@ -30,6 +30,19 @@ export default {
             console.log(error.message)
             return res.status(500).send(error.message)
         }
+    },
+
+    async updtGenbaAcip(req, res) {
+        const data = req.body
+        GenbaAcip.update(data, {
+            where: { sheet: req.params.id },
+        })
+            .then(() =>
+                GenbaAcip.findOne({
+                    where: { id_genba: req.params.id },
+                }).then((x) => res.status(200).json(x.id_genba))
+            )
+            .catch((error) => res.status(500).send(error.message))
     },
 
     async saveGenbaAcip(req, res) {
