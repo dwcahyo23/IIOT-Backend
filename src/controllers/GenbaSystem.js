@@ -6,21 +6,21 @@ import _ from 'lodash'
 export default {
     async instGenbaAcip(req, res) {
         const data = req.body
-        try {
-            const response = GenbaAcip.create({
-                ...data,
-                id_genba: req.params.id,
-                com: 'N/A',
-            }).then(() =>
+        GenbaAcip.create({
+            ...data,
+            id_genba: req.params.id,
+            com: 'N/A',
+            dept: 'N/A',
+            status: 'Open',
+        })
+            .then(() =>
                 GenbaAcip.findOne({
                     where: { id_genba: req.params.id },
                 }).then((x) => res.status(200).json(x.sheet))
             )
-            return res.status(200).json(response)
-        } catch (error) {
-            console.log(error.message)
-            return res.status(500).send(error.message)
-        }
+            .catch((err) => {
+                return res.status(500).send(error.message)
+            })
     },
 
     async updtGenbaAcip(req, res) {
