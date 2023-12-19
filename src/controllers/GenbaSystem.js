@@ -7,25 +7,16 @@ export default {
     async instGenbaAcip(req, res) {
         const data = req.body
         try {
-            const findOne = await GenbaAcip.findOne({
-                where: { id_genba: req.params.id },
-            })
-
-            if (findOne == null) {
-                GenbaAcip.create({
-                    ...data,
-                    id_genba: req.params.id,
-                }).then(() =>
-                    GenbaAcip.findOne({
-                        where: { id_genba: req.params.id },
-                    }).then((x) => res.status(200).json(x.sheet))
-                )
-            } else {
-                const response = GenbaAcip.update(data, {
+            const response = GenbaAcip.create({
+                ...data,
+                id_genba: req.params.id,
+                plant: 'N/A',
+            }).then(() =>
+                GenbaAcip.findOne({
                     where: { id_genba: req.params.id },
-                })
-                return res.status(200).json(response)
-            }
+                }).then((x) => res.status(200).json(x.sheet))
+            )
+            return res.status(200).json(response)
         } catch (error) {
             console.log(error.message)
             return res.status(500).send(error.message)
@@ -47,23 +38,15 @@ export default {
 
     async saveGenbaAcip(req, res) {
         const data = req.body
-        try {
-            const findOne = await GenbaAcip.findOne({
-                where: { id_genba: data.id_genba },
-            })
-
-            if (findOne == null) {
-                return res.status(404).json({ message: 'data not found' })
-            } else {
-                const response = GenbaAcip.update(data, {
+        GenbaAcip.update(data, {
+            where: { id_genba: data.id_genba },
+        })
+            .then(() =>
+                GenbaAcip.findOne({
                     where: { id_genba: data.id_genba },
-                })
-                return res.status(200).json(response)
-            }
-        } catch (error) {
-            console.log(error.message)
-            return res.status(500).json(error)
-        }
+                }).then((x) => res.status(200).json(x))
+            )
+            .catch((error) => res.status(500).send(error.message))
     },
 
     async ConvertAcip(req, res) {
@@ -129,9 +112,10 @@ export default {
                         [Op.not]: null,
                     },
                 },
+                attributes: { exclude: ['images1', 'images2'] },
             })
-            return res.status(200).json({ payload: 'success', data: data })
-            // return res.status(200).json(response)
+            // return res.status(200).json({ payload: 'success', data: data })
+            return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json(error)
@@ -152,18 +136,10 @@ export default {
 
     async delGenbaAcipOne(req, res) {
         try {
-            const findOne = await GenbaAcip.findOne({
+            const response = GenbaAcip.destroy({
                 where: { id_genba: req.params.id },
             })
-
-            if (findOne == null) {
-                return res.status(404).json({ message: 'data not found' })
-            } else {
-                const response = GenbaAcip.destroy({
-                    where: { id_genba: req.params.id },
-                })
-                return res.status(200).json(response)
-            }
+            return res.status(200).json(response)
         } catch (error) {
             return res.status(500).json(error)
         }
