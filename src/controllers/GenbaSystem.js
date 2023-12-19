@@ -10,7 +10,7 @@ export default {
             const response = GenbaAcip.create({
                 ...data,
                 id_genba: req.params.id,
-                plant: 'N/A',
+                com: 'N/A',
             }).then(() =>
                 GenbaAcip.findOne({
                     where: { id_genba: req.params.id },
