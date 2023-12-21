@@ -1,9 +1,9 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
+import mysql from '../config/mysql'
 
 const { DataTypes } = Sequelize
 
-export const ZbSens = sequelize.define(
+export const ZbSens = mysql.define(
     'ZbSens',
     {
         id: {
@@ -20,7 +20,7 @@ export const ZbSens = sequelize.define(
     { timestamps: false }
 )
 
-export const ZbView = sequelize.define(
+export const ZbView = mysql.define(
     'ZbView',
     {
         id: {
@@ -36,7 +36,7 @@ export const ZbView = sequelize.define(
     { timestamps: false }
 )
 
-export const ZbConn = sequelize.define('ZbConn', {
+export const ZbConn = mysql.define('ZbConn', {
     uuid: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -72,7 +72,7 @@ export const ZbConn = sequelize.define('ZbConn', {
     },
 })
 
-export const ZbLog = sequelize.define('ZbLog', {
+export const ZbLog = mysql.define('ZbLog', {
     uuid: {
         type: DataTypes.STRING,
         primaryKey: true,

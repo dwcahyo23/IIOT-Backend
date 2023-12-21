@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
+import mysql from '../config/mysql.js'
 import _ from 'lodash'
 
 const { DataTypes } = Sequelize
 
-export const GenbaAcip = sequelize.define('GenbaAcip', {
+export const GenbaAcip = mysql.define('GenbaAcip', {
     id_genba: {
         type: DataTypes.STRING,
         primaryKey: true,

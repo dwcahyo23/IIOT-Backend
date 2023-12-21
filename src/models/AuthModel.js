@@ -1,10 +1,9 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
-import Utils from '../@utils/utils.js'
+import mysql from '../config/mysql.js'
 
 const { DataTypes } = Sequelize
 
-export const AuthUser = sequelize.define(
+export const AuthUser = mysql.define(
     '_authUsers',
     {
         uuid: {
@@ -25,7 +24,7 @@ export const AuthUser = sequelize.define(
     { timestamps: false }
 )
 
-export const AuthData = sequelize.define(
+export const AuthData = mysql.define(
     '_authData',
     {
         displayName: {

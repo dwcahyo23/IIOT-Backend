@@ -1,7 +1,6 @@
-import { Op, Sequelize, json, where } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import {
     MaintenanceMachine,
-    MaintenanceCategory,
     MaintenanceStock,
     MaintenanceRequest,
     MaintenanceReport,
@@ -14,7 +13,6 @@ import { AuthData } from '../models/AuthModel'
 import { GenbaAcip } from '../models/GenbaModel'
 import { PgMowMtn } from '../models/PgMowMtn'
 import _ from 'lodash'
-import { error } from 'winston'
 import dayjs from 'dayjs'
 
 MaintenanceMachine.hasMany(MaintenanceSparepart, {
@@ -27,17 +25,6 @@ MaintenanceSparepart.belongsTo(MaintenanceMachine, {
     targetKey: 'mch_code',
     constraints: false,
 })
-
-// MaintenanceCategory.hasMany(MaintenanceSparepart, {
-//     foreignKey: 'slug',
-//     sourceKey: 'slug',
-//     constraints: false,
-// })
-// MaintenanceSparepart.belongsTo(MaintenanceCategory, {
-//     foreignKey: 'slug',
-//     targetKey: 'slug',
-//     constraints: false,
-// })
 
 export default {
     //--- for dev bulk post  ---
@@ -301,21 +288,6 @@ export default {
     //             data,
     //             { validate: true },
     //             { fields: ['mat_no', 'mat_name', 'grade'] }
-    //         )
-    //         return res.status(200).json(response)
-    //     } catch (error) {
-    //         console.log(error)
-    //         res.status(500).json(error)
-    //     }
-    // },
-
-    // async insMaintenanceCategory(req, res) {
-    //     const category = req.body
-    //     try {
-    //         const response = await MaintenanceCategory.bulkCreate(
-    //             category,
-    //             { validate: true },
-    //             { fields: ['title', 'slug', 'color'] }
     //         )
     //         return res.status(200).json(response)
     //     } catch (error) {
@@ -1027,16 +999,6 @@ export default {
             res.status(500).json(error)
         }
     },
-
-    // async getMaintenanceCategory(req, res) {
-    //     try {
-    //         const response = await MaintenanceCategory.findAll({})
-    //         return res.status(200).json(response)
-    //     } catch (error) {
-    //         console.log(error)
-    //         res.status(500).json(error)
-    //     }
-    // },
 
     async getMaintenanceMachineCom(req, res) {
         try {

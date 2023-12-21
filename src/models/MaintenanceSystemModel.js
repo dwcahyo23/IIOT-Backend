@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
+import mysql from '../config/mysql.js'
 import { addSeconds, format } from 'date-fns'
 import _ from 'lodash'
 
 const { DataTypes } = Sequelize
 
-export const MaintenanceMachine = sequelize.define(
+export const MaintenanceMachine = mysql.define(
     'MaintenanceMachine',
     {
         uuid: {
@@ -30,7 +30,7 @@ export const MaintenanceMachine = sequelize.define(
     { timestamps: false }
 )
 
-export const MaintenanceSparepart = sequelize.define('MaintenanceSparepart', {
+export const MaintenanceSparepart = mysql.define('MaintenanceSparepart', {
     uuid: {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,
@@ -60,26 +60,26 @@ export const MaintenanceSparepart = sequelize.define('MaintenanceSparepart', {
     },
 })
 
-export const MaintenanceCategory = sequelize.define(
-    'MaintenanceCategory',
-    {
-        uuid: {
-            type: DataTypes.STRING(8),
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-        },
-        title: DataTypes.STRING(10),
-        slug: {
-            type: DataTypes.STRING(10),
-            unique: true,
-            allowNull: false,
-        },
-        color: DataTypes.STRING(7),
-    },
-    { timestamps: false }
-)
+// export const MaintenanceCategory = mysql.define(
+//     'MaintenanceCategory',
+//     {
+//         uuid: {
+//             type: DataTypes.STRING(8),
+//             defaultValue: DataTypes.UUIDV4,
+//             primaryKey: true,
+//         },
+//         title: DataTypes.STRING(10),
+//         slug: {
+//             type: DataTypes.STRING(10),
+//             unique: true,
+//             allowNull: false,
+//         },
+//         color: DataTypes.STRING(7),
+//     },
+//     { timestamps: false }
+// )
 
-// export const MaintenanceCode = sequelize.define(
+// export const MaintenanceCode = mysql.define(
 //     'MaintenanceCode',
 //     {
 //         uuid: {
@@ -98,7 +98,7 @@ export const MaintenanceCategory = sequelize.define(
 //     { timestamps: false }
 // )
 
-export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
+export const MaintenanceRequest = mysql.define('MaintenanceRequest', {
     uuid_request: {
         type: DataTypes.STRING(8),
         defaultValue: DataTypes.UUIDV4,
@@ -140,7 +140,7 @@ export const MaintenanceRequest = sequelize.define('MaintenanceRequest', {
     },
 })
 
-export const MaintenanceReport = sequelize.define('MaintenanceReport', {
+export const MaintenanceReport = mysql.define('MaintenanceReport', {
     sheet_no: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -167,7 +167,7 @@ export const MaintenanceReport = sequelize.define('MaintenanceReport', {
     feedback_user: DataTypes.STRING,
 })
 
-export const MaintenanceWorkshopReport = sequelize.define(
+export const MaintenanceWorkshopReport = mysql.define(
     'MaintenanceWorkshopReport',
     {
         sheet_no: {
@@ -199,7 +199,7 @@ export const MaintenanceWorkshopReport = sequelize.define(
     }
 )
 
-export const MaintenanceStock = sequelize.define('MaintenanceStock', {
+export const MaintenanceStock = mysql.define('MaintenanceStock', {
     uuid: {
         type: DataTypes.STRING(8),
         defaultValue: DataTypes.UUIDV4,
@@ -210,7 +210,7 @@ export const MaintenanceStock = sequelize.define('MaintenanceStock', {
     grade: DataTypes.STRING(8),
 })
 
-export const MaintenanceSparepartControlStcok = sequelize.define(
+export const MaintenanceSparepartControlStcok = mysql.define(
     'MaintenanceSparepartControlStock',
     {
         uuid: {
@@ -230,7 +230,7 @@ export const MaintenanceSparepartControlStcok = sequelize.define(
     }
 )
 
-export const MaintenanceUser = sequelize.define(
+export const MaintenanceUser = mysql.define(
     'MaintenanceUser',
     {
         uuid: {

@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
+import mysql from '../config/mysql.js'
 import { addSeconds, format } from 'date-fns'
 import _ from 'lodash'
 
 const { DataTypes } = Sequelize
 
-export const ModbusAppModel = sequelize.define('ModbusApp', {
+export const ModbusAppModel = mysql.define('ModbusApp', {
     mch_code: { type: DataTypes.STRING(8), primaryKey: true },
     mch_name: DataTypes.STRING(25),
     mch_com: DataTypes.STRING(25),
@@ -28,7 +28,7 @@ export const ModbusAppModel = sequelize.define('ModbusApp', {
     },
 })
 
-export const ModbusAppModelResult = sequelize.define('ModbusAppResult', {
+export const ModbusAppModelResult = mysql.define('ModbusAppResult', {
     uuid: {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,
@@ -62,7 +62,7 @@ export const ModbusAppModelResult = sequelize.define('ModbusAppResult', {
     },
 })
 
-export const ModbusAppModelCategory = sequelize.define('ModbusAppCategory', {
+export const ModbusAppModelCategory = mysql.define('ModbusAppCategory', {
     uuid: {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,

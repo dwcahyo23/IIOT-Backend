@@ -1,9 +1,9 @@
 import { Sequelize } from 'sequelize'
-import sequelize from '../config/sequelize.js'
+import mysql from '../config/mysql'
 
 const { DataTypes } = Sequelize
 
-export const WhatsappUser = sequelize.define(
+export const WhatsappUser = mysql.define(
     'WhatsappUser',
     {
         uuid: {
@@ -33,7 +33,7 @@ export const WhatsappUser = sequelize.define(
     { timestamps: false }
 )
 
-export const WhatsappConfig = sequelize.define(
+export const WhatsappConfig = mysql.define(
     'WhatsappConfig',
     {
         uuid: {
@@ -51,7 +51,7 @@ export const WhatsappConfig = sequelize.define(
     { timestamps: false }
 )
 
-export const WhatsappLog = sequelize.define('WhatsappLog', {
+export const WhatsappLog = mysql.define('WhatsappLog', {
     id_log: {
         type: DataTypes.STRING,
         primaryKey: true,

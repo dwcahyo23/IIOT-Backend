@@ -1,9 +1,9 @@
-import sequelize from '../config/sequelize'
+import mysql from '../config/mysql'
 import { Sequelize } from 'sequelize'
 
 const { DataTypes } = Sequelize
 
-export const ScwModel = sequelize.define('ProductionSCW', {
+export const ScwModel = mysql.define('ProductionSCW', {
     uuid: {
         type: DataTypes.STRING,
         primaryKey: true,
