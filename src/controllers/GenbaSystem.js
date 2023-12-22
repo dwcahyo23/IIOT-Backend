@@ -3,6 +3,29 @@ import { GenbaAcip } from '../models/GenbaModel'
 import sharp from 'sharp'
 import _ from 'lodash'
 
+const compresImage = (attachmentData, resize, quality) => {
+    let imgBuffer = Buffer.from(attachmentData.data, 'base64')
+    return new Promise((resolve, reject) => {
+        sharp(imgBuffer)
+            .resize(resize)
+            .jpeg({ quality: quality })
+            .toBuffer()
+            .then((resizedImageBuffer) => {
+                let resizedImageData = resizedImageBuffer.toString('base64')
+                let resizedBase64 = `data:${attachmentData.mimetype};base64,${resizedImageData}`
+                resolve({
+                    mimetype: attachmentData.mimetype,
+                    data: resizedImageData,
+                    filesize: resizedImageData.length,
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+                reject(err)
+            })
+    })
+}
+
 export default {
     async instGenbaAcip(req, res) {
         const data = req.body
@@ -19,7 +42,7 @@ export default {
                 }).then((x) => res.status(200).json(x.sheet))
             )
             .catch((err) => {
-                return res.status(500).send(error.message)
+                return res.status(500).send(err.message)
             })
     },
 
@@ -33,12 +56,56 @@ export default {
                     where: { sheet: req.params.id },
                 }).then((x) => res.status(200).json(x.id_genba))
             )
-            .catch((error) => res.status(500).send(error.message))
+            .catch((error) => {
+                console.log(error)
+                res.status(500).send(error.message)
+            })
     },
 
     async saveGenbaAcip(req, res) {
         const data = req.body
-        GenbaAcip.update(data, {
+
+        if (_.has(data, 'new_img1') && !_.isUndefined(data.new_img1)) {
+            return compresImage(data.new_img1, 250, 80).then((x) => {
+                GenbaAcip.update(
+                    { ...data, images1: x },
+                    {
+                        where: { id_genba: data.id_genba },
+                    }
+                )
+                    .then(() =>
+                        GenbaAcip.findOne({
+                            where: { id_genba: data.id_genba },
+                        }).then((x) => res.status(200).json(x))
+                    )
+                    .catch((error) => {
+                        console.log(error)
+                        res.status(500).send(error.message)
+                    })
+            })
+        }
+
+        if (_.has(data, 'new_img2') && !_.isUndefined(data.new_img2)) {
+            return compresImage(data.new_img2, 250, 80).then((x) => {
+                GenbaAcip.update(
+                    { ...data, images2: x },
+                    {
+                        where: { id_genba: data.id_genba },
+                    }
+                )
+                    .then(() =>
+                        GenbaAcip.findOne({
+                            where: { id_genba: data.id_genba },
+                        }).then((x) => res.status(200).json(x))
+                    )
+                    .catch((error) => {
+                        console.log(error)
+                        res.status(500).send(error.message)
+                    })
+            })
+        }
+
+        await GenbaAcip.update(data, {
             where: { id_genba: data.id_genba },
         })
             .then(() =>
@@ -46,7 +113,10 @@ export default {
                     where: { id_genba: data.id_genba },
                 }).then((x) => res.status(200).json(x))
             )
-            .catch((error) => res.status(500).send(error.message))
+            .catch((error) => {
+                console.log(error)
+                res.status(500).send(error.message)
+            })
     },
 
     async ConvertAcip(req, res) {

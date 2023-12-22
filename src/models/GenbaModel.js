@@ -23,6 +23,15 @@ export const GenbaAcip = mysql.define('GenbaAcip', {
     case: DataTypes.STRING,
     images1: {
         type: DataTypes.JSON,
+        // set(value) {
+        //     compresImage(value, 250, 60)
+        //         .then((compressed) => {
+        //             console.log(compressed)
+        //             this.setDataValue('images1', compressed)
+        //         })
+        //         .catch((err) => console.log(err))
+        // },
+
         get: function () {
             // console.log('img1:' + typeof this.getDataValue('images1'))
             if (typeof this.getDataValue('images1') == 'string') {
