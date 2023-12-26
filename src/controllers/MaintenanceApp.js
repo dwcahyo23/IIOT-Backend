@@ -18,31 +18,31 @@ export default {
     async getMnReport(req, res) {
         await MaintenanceReport.findAll()
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnRequest(req, res) {
         await MaintenanceRequest.findAll()
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnMachine(req, res) {
         await MaintenanceMachine.findAll()
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnSparepart(req, res) {
         await MaintenanceSparepart.findAll()
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnStock(req, res) {
         await MaintenanceStock.findAll()
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnErp(req, res) {
@@ -61,7 +61,7 @@ export default {
             },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     //? GET DATA BY ID
@@ -71,7 +71,7 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnRequestById(req, res) {
@@ -79,25 +79,25 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnMachineById(req, res) {
         await MaintenanceMachine.findOne({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnSparepartById(req, res) {
         await MaintenanceSparepart.findOne({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnStockById(req, res) {
         await MaintenanceStock.findOne({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async getMnErpById(req, res) {
@@ -116,7 +116,7 @@ export default {
             },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     //? SAVE DATA BY ID
@@ -127,7 +127,7 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(data))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async saveMnRequestById(req, res) {
@@ -136,7 +136,7 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(data))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async saveMnMachineById(req, res) {
@@ -145,7 +145,7 @@ export default {
             where: { uuid: req.params.id },
         })
             .then((x) => res.status(200).json(data))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async saveMnSparepartById(req, res) {
@@ -154,14 +154,14 @@ export default {
             where: { uuid: req.params.id },
         })
             .then((x) => res.status(200).json(data))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async saveMnStockById(req, res) {
         const data = req.body
         await MaintenanceStock.update(data, { where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(data))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     //! REMOVE DATA BY ID
@@ -171,7 +171,7 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async removeMnRequestById(req, res) {
@@ -179,24 +179,24 @@ export default {
             where: { sheet_no: req.params.id },
         })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async removeMnMachineById(req, res) {
         await MaintenanceMachine.destroy({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async removeMnSparepartById(req, res) {
         await MaintenanceSparepart.destroy({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 
     async removeMnStockById(req, res) {
         await MaintenanceStock.destroy({ where: { uuid: req.params.id } })
             .then((x) => res.status(200).json(x))
-            .catch((err) => res.send(500).json(err))
+            .catch((err) => res.status(500).json(err))
     },
 }
