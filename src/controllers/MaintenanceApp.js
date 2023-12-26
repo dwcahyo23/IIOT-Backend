@@ -119,48 +119,50 @@ export default {
             .catch((err) => res.status(500).json(err))
     },
 
-    //? SAVE DATA BY ID
+    //? SAVE DATA OR UPDATE BY ID
 
     async saveMnReportById(req, res) {
         const data = req.body
-        await MaintenanceReport.update(data, {
-            where: { sheet_no: req.params.id },
-        })
-            .then((x) => res.status(200).json(data))
+        await MaintenanceReport.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
             .catch((err) => res.status(500).json(err))
     },
 
     async saveMnRequestById(req, res) {
         const data = req.body
-        await MaintenanceRequest.update(data, {
-            where: { sheet_no: req.params.id },
-        })
-            .then((x) => res.status(200).json(data))
+        await MaintenanceRequest.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
             .catch((err) => res.status(500).json(err))
     },
 
     async saveMnMachineById(req, res) {
         const data = req.body
-        await MaintenanceMachine.update(data, {
-            where: { uuid: req.params.id },
-        })
-            .then((x) => res.status(200).json(data))
+        await MaintenanceMachine.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
             .catch((err) => res.status(500).json(err))
     },
 
     async saveMnSparepartById(req, res) {
         const data = req.body
-        await MaintenanceSparepart.update(data, {
-            where: { uuid: req.params.id },
-        })
-            .then((x) => res.status(200).json(data))
+        await MaintenanceSparepart.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
             .catch((err) => res.status(500).json(err))
     },
 
     async saveMnStockById(req, res) {
         const data = req.body
-        await MaintenanceStock.update(data, { where: { uuid: req.params.id } })
-            .then((x) => res.status(200).json(data))
+        await MaintenanceStock.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
             .catch((err) => res.status(500).json(err))
     },
 
