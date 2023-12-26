@@ -28,10 +28,10 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
         type: DataTypes.STRING(100),
     },
     start_time: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
     },
     end_time: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
     },
     input_by: {
         type: DataTypes.STRING,
