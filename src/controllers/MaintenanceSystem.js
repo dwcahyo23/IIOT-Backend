@@ -1172,23 +1172,24 @@ export default {
             return new Promise((resolve, reject) => {
                 const useMixing = _(material)
                     .map((val) => {
-                        return {
-                            ...val,
-                            mch_index: _.find(
-                                spice,
-                                {
-                                    mch_code: val.mch_no,
-                                    mch_com:
-                                        val.com_no == '01'
-                                            ? 'GM1'
-                                            : val.com_no == '02'
-                                            ? 'GM2'
-                                            : val.com_no == '03'
-                                            ? 'GM3'
-                                            : 'GM5',
-                                } || {}
-                            ),
-                        }
+                        if (dayjs(val.ymd).year() >= '2023')
+                            return {
+                                ...val,
+                                mch_index: _.find(
+                                    spice,
+                                    {
+                                        mch_code: val.mch_no,
+                                        mch_com:
+                                            val.com_no == '01'
+                                                ? 'GM1'
+                                                : val.com_no == '02'
+                                                ? 'GM2'
+                                                : val.com_no == '03'
+                                                ? 'GM3'
+                                                : 'GM5',
+                                    } || {}
+                                ),
+                            }
                     })
                     .groupBy((val) => val.mch_index?.responsible)
                     .omit(['undefined'])
