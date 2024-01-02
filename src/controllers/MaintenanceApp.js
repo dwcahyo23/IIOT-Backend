@@ -46,13 +46,13 @@ export default {
     },
 
     async getMnErp(req, res) {
-        await PgMowMtn.findAll()({
+        await PgMowMtn.findAll({
             where: {
                 [Op.and]: [
                     Sequelize.where(
                         Sequelize.fn('date', Sequelize.col('ymd')),
-                        '=',
-                        dayjs.year
+                        '>=',
+                        '2023-01-01'
                     ),
                     {
                         chk_mark: { [Op.not]: 'C' },
@@ -106,8 +106,8 @@ export default {
                 [Op.and]: [
                     Sequelize.where(
                         Sequelize.fn('date', Sequelize.col('ymd')),
-                        '=',
-                        dayjs.year
+                        '>=',
+                        '2023-01-01'
                     ),
                     {
                         chk_mark: { [Op.not]: 'C' },

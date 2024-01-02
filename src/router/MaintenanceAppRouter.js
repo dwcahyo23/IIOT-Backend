@@ -4,7 +4,7 @@ import { verifyToken } from '../middleware/verifyToken.js'
 export default (app) => {
     //? GET DATA
     app.get('/mnreport', MaintenanceApp.getMnReport)
-    app.get('/mnrequest', MaintenanceApp.getMnReport)
+    app.get('/mnrequest', MaintenanceApp.getMnRequest)
     app.get('/mnmachine', MaintenanceApp.getMnMachine)
     app.get('/mnsparepart', MaintenanceApp.getMnSparepart)
     app.get('/mnstock', MaintenanceApp.getMnStock)
