@@ -138,6 +138,7 @@ export const MaintenanceRequest = mysql.define('MaintenanceRequest', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    regenerate: DataTypes.STRING(50),
 })
 
 export const MaintenanceReport = mysql.define('MaintenanceReport', {
