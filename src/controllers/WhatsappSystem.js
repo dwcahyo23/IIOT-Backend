@@ -59,6 +59,8 @@ export default {
                                     '>=',
                                     dayjs().format('YYYY-MM-DD')
                                 ),
+                                //? Dev
+
                                 {
                                     //validasi pgsql
                                     sts_wa: { [Op.eq]: 'N' },
@@ -103,7 +105,10 @@ export default {
 
                         const resultX = _(user).map((val) => {
                             const matchCom = val.role.split(',')
-                            if (val.responsible == true) {
+                            if (
+                                val.responsible == true &&
+                                val.with_prior == false
+                            ) {
                                 return {
                                     ...val.dataValues,
                                     msg: _.filter(mapData, (mch) => {
@@ -114,7 +119,21 @@ export default {
                                         )
                                     }),
                                 }
-                            } else {
+                            } else if (val.with_prior == true) {
+                                const prior = val.prior.split(',')
+                                return {
+                                    ...val.dataValues,
+                                    msg: _.filter(mapData, (mch) => {
+                                        return (
+                                            _.includes(matchCom, mch.com_no) &&
+                                            _.includes(prior, mch.pri_no)
+                                        )
+                                    }),
+                                }
+                            } else if (
+                                val.responsible == false &&
+                                val.with_prior == false
+                            ) {
                                 return {
                                     ...val.dataValues,
                                     msg: _.filter(mapData, (mch) => {
@@ -124,6 +143,7 @@ export default {
                             }
                         })
 
+                        //? Dev
                         if (_.isArray(mapData) && mapData.length > 0) {
                             let updateSheetNo = []
                             let updateLog = []
@@ -238,7 +258,11 @@ export default {
 
                             const resultX = _(user).map((val) => {
                                 const matchCom = val.role.split(',')
-                                if (val.responsible == true) {
+                                if (
+                                    val.responsible == true &&
+                                    val.with_prior == false &&
+                                    val.with_dep_no == false
+                                ) {
                                     return {
                                         ...val.dataValues,
                                         msg: _.filter(mapData, (mch) => {
@@ -254,7 +278,8 @@ export default {
                                     }
                                 } else if (
                                     val.responsible == false &&
-                                    val.with_dep_no == true
+                                    val.with_dep_no == true &&
+                                    val.with_prior == false
                                 ) {
                                     const dep_no = val.dep_no.split(',')
                                     return {
@@ -270,6 +295,25 @@ export default {
                                         }),
                                     }
                                 } else if (
+                                    val.responsible == false &&
+                                    val.with_prior == true &&
+                                    val.with_dep_no == false
+                                ) {
+                                    const prior = val.prior.split(',')
+                                    return {
+                                        ...val.dataValues,
+                                        msg: _.filter(mapData, (mch) => {
+                                            return (
+                                                _.includes(
+                                                    matchCom,
+                                                    mch.com_no
+                                                ) &&
+                                                _.includes(prior, mch.pri_no)
+                                            )
+                                        }),
+                                    }
+                                } else if (
+                                    val.with_prior == false &&
                                     val.responsible == false &&
                                     val.with_dep_no == false
                                 ) {

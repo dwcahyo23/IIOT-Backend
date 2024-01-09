@@ -29,6 +29,12 @@ export const WhatsappUser = mysql.define(
         dep_no: {
             type: DataTypes.STRING(20),
         },
+        with_prior: {
+            type: DataTypes.BOOLEAN,
+        },
+        prior: {
+            type: DataTypes.STRING(20),
+        },
     },
     { timestamps: false }
 )
