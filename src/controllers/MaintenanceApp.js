@@ -52,7 +52,7 @@ export default {
                     Sequelize.where(
                         Sequelize.fn('date', Sequelize.col('ymd')),
                         '>=',
-                        '2022-01-01'
+                        '2023-01-01'
                     ),
                     {
                         chk_mark: { [Op.not]: 'C' },
