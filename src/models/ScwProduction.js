@@ -39,4 +39,7 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
     finished_by: {
         type: DataTypes.STRING,
     },
+    status: {
+        type: DataTypes.STRING,
+    },
 })
