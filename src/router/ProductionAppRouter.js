@@ -6,7 +6,7 @@ export default (app) => {
     //? CREATE DATA
     app.post('/ProductionSCW', ProductionApp.createPDSCW)
     //? SAVE DATA BY ID
-    app.patch('/ProductionSCW/:id', ProductionApp.saveByIdPDSCW)
+    app.post('/ProductionSCW/:id', ProductionApp.saveByIdPDSCW)
     //? GET EDIT DATA BY ID
     app.get('/ProductionSCW/:id', ProductionApp.getByIdPDSCW)
     //! REMOVE DATA BY ID
