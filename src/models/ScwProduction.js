@@ -41,5 +41,6 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
     },
     status: {
         type: DataTypes.STRING,
+        defaultValue: 'Open',
     },
 })

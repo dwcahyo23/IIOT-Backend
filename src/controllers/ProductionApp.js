@@ -7,7 +7,7 @@ import { ProductionSCW } from '../models/ScwProduction'
 export default {
     //? GET DATA
     async getPDSCW(req, res) {
-        await ProductionSCW.findAll()
+        await ProductionSCW.findAll({ order: [['createdAt', 'DESC']] })
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
     },
@@ -15,6 +15,13 @@ export default {
     //? CREATE DATA
     async createPDSCW(req, res) {
         await ProductionSCW.create(req.body)
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
+    },
+
+    //? CREATE DATA ARR
+    async creatPDSCWarr(req, res) {
+        await ProductionSCW.bulkCreate(req.body)
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
     },

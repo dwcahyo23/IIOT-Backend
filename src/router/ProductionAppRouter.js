@@ -11,4 +11,6 @@ export default (app) => {
     app.get('/ProductionSCW/:id', ProductionApp.getByIdPDSCW)
     //! REMOVE DATA BY ID
     app.delete('/ProductionSCW/:id', ProductionApp.removePDSCW)
+    //? BULK
+    app.post('/ProductionScwArr', ProductionApp.creatPDSCWarr)
 }
