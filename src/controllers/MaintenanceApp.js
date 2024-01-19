@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import { Op, Sequelize, QueryTypes } from 'sequelize'
 
 import {
     MaintenanceReport,
@@ -11,7 +11,9 @@ import {
 
 import { PgMowMtn } from '../models/PgMowMtn'
 
+import pg2 from '../config/pg2'
 import dayjs from 'dayjs'
+import { types } from 'pg'
 
 export default {
     //? GET DATA
@@ -60,6 +62,25 @@ export default {
                 ],
             },
         })
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
+    },
+
+    async getMnStokErp(req, res) {
+        await pg2
+            .query(
+                "select a.mat_no, a.mat_name, a.stk_qty, a.stk_no from sch_ot.mat_stk_mast_view a, sch_ot.bas_stk_mast b where a.stk_no = b.stk_no and b.stk_kind = 'B'",
+                { type: QueryTypes.SELECT }
+            )
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
+    },
+
+    async getMnIssuErp(req, res) {
+        await pg2
+            .query('SELECT x.* FROM sch_ot.view_mat_len_mast x', {
+                type: QueryTypes.SELECT,
+            })
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
     },

@@ -3,32 +3,58 @@ import { verifyToken } from '../middleware/verifyToken.js'
 
 export default (app) => {
     //? GET DATA
-    app.get('/mnreport', MaintenanceApp.getMnReport)
-    app.get('/mnrequest', MaintenanceApp.getMnRequest)
-    app.get('/mnmachine', MaintenanceApp.getMnMachine)
-    app.get('/mnsparepart', MaintenanceApp.getMnSparepart)
-    app.get('/mnstock', MaintenanceApp.getMnStock)
-    app.get('/mnerp', MaintenanceApp.getMnErp)
+    app.get('/mnreport', verifyToken, MaintenanceApp.getMnReport)
+    app.get('/mnrequest', verifyToken, MaintenanceApp.getMnRequest)
+    app.get('/mnmachine', verifyToken, MaintenanceApp.getMnMachine)
+    app.get('/mnsparepart', verifyToken, MaintenanceApp.getMnSparepart)
+    app.get('/mnstock', verifyToken, MaintenanceApp.getMnStock)
+    app.get('/mnerp', verifyToken, MaintenanceApp.getMnErp)
+    app.get('/stokmnerp', MaintenanceApp.getMnStokErp)
+    app.get('/issumnerp', MaintenanceApp.getMnIssuErp)
 
     //? GET DATA BY ID
-    app.get('/mnreportid/:id', MaintenanceApp.getMnReportById)
-    app.get('/mnrequestid/:id', MaintenanceApp.getMnRequestById)
-    app.get('/mnmachineid/:id', MaintenanceApp.getMnMachineById)
-    app.get('/mnsparepartid/:id', MaintenanceApp.getMnSparepartById)
-    app.get('/mnstockid/:id', MaintenanceApp.getMnStockById)
-    app.get('/mnerpid/:id', MaintenanceApp.getMnErpById)
+    app.get('/mnreportid/:id', verifyToken, MaintenanceApp.getMnReportById)
+    app.get('/mnrequestid/:id', verifyToken, MaintenanceApp.getMnRequestById)
+    app.get('/mnmachineid/:id', verifyToken, MaintenanceApp.getMnMachineById)
+    app.get(
+        '/mnsparepartid/:id',
+        verifyToken,
+        MaintenanceApp.getMnSparepartById
+    )
+    app.get('/mnstockid/:id', verifyToken, MaintenanceApp.getMnStockById)
+    app.get('/mnerpid/:id', verifyToken, MaintenanceApp.getMnErpById)
 
     //? SAVE DATA BY ID
-    app.patch('/mnreportid/:id', MaintenanceApp.saveMnReportById)
-    app.patch('/mnrequestid/:id', MaintenanceApp.saveMnRequestById)
-    app.patch('/mnmachineid/:id', MaintenanceApp.saveMnMachineById)
-    app.patch('/mnsparepartid/:id', MaintenanceApp.saveMnSparepartById)
-    app.patch('/mnstockid/:id', MaintenanceApp.saveMnStockById)
+    app.patch('/mnreportid/:id', verifyToken, MaintenanceApp.saveMnReportById)
+    app.patch('/mnrequestid/:id', verifyToken, MaintenanceApp.saveMnRequestById)
+    app.patch('/mnmachineid/:id', verifyToken, MaintenanceApp.saveMnMachineById)
+    app.patch(
+        '/mnsparepartid/:id',
+        verifyToken,
+        MaintenanceApp.saveMnSparepartById
+    )
+    app.patch('/mnstockid/:id', verifyToken, MaintenanceApp.saveMnStockById)
 
     //! REMOVE DATA BY ID
-    app.delete('/mnreportid/:id', MaintenanceApp.removeMnReportById)
-    app.delete('/mnrequestid/:id', MaintenanceApp.removeMnRequestById)
-    app.delete('/mnmachineid/:id', MaintenanceApp.removeMnMachineById)
-    app.delete('/mnsparepartid/:id', MaintenanceApp.removeMnSparepartById)
-    app.delete('/mnstockid/:id', MaintenanceApp.removeMnStockById)
+    app.delete(
+        '/mnreportid/:id',
+        verifyToken,
+        MaintenanceApp.removeMnReportById
+    )
+    app.delete(
+        '/mnrequestid/:id',
+        verifyToken,
+        MaintenanceApp.removeMnRequestById
+    )
+    app.delete(
+        '/mnmachineid/:id',
+        verifyToken,
+        MaintenanceApp.removeMnMachineById
+    )
+    app.delete(
+        '/mnsparepartid/:id',
+        verifyToken,
+        MaintenanceApp.removeMnSparepartById
+    )
+    app.delete('/mnstockid/:id', verifyToken, MaintenanceApp.removeMnStockById)
 }
