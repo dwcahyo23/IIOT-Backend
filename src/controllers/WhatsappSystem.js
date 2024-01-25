@@ -412,6 +412,7 @@ export default {
                     .map((value, sheet_no) => ({
                         sheet_no,
                         com: value[0].mch_com,
+                        mch_code: value[0].mch_code,
                         value,
                     }))
                     .value()
