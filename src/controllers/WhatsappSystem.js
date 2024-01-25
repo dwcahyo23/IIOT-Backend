@@ -403,6 +403,7 @@ export default {
                     [Op.in]: ['Breakdown', '01', 'Workshop Breakdown', '05'],
                 },
                 audit_request: 'N',
+                item_ready: 'N',
             },
             order: [['sheet_no', 'ASC']],
         })
