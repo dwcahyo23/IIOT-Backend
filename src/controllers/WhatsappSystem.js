@@ -404,6 +404,7 @@ export default {
                 },
                 audit_request: 'N',
             },
+            order: [['sheet_no', 'ASC']],
         })
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
