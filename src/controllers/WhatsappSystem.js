@@ -5,7 +5,10 @@ import {
     WhatsappLog,
 } from '../models/WhatsappModel'
 import { PgMowMtn } from '../models/PgMowMtn'
-import { MaintenanceMachine } from '../models/MaintenanceSystemModel'
+import {
+    MaintenanceMachine,
+    MaintenanceRequest,
+} from '../models/MaintenanceSystemModel'
 import dayjs from 'dayjs'
 import _ from 'lodash'
 
@@ -391,5 +394,18 @@ export default {
             console.log(error)
             res.status(500).json(error)
         }
+    },
+
+    async getSparepartBreakdown(req, res) {
+        await MaintenanceRequest.findAll({
+            where: {
+                category_request: {
+                    [Op.in]: ['Breakdown', '01', 'Workshop Breakdown', '05'],
+                },
+                audit_request: 'N',
+            },
+        })
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
     },
 }
