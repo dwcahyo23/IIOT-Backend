@@ -7,6 +7,7 @@ import {
     MaintenanceSparepart,
     MaintenanceStock,
     MaintenanceUser,
+    MaintenanceSparepartControlStcok,
 } from '../models/MaintenanceSystemModel'
 
 import { PgMowMtn } from '../models/PgMowMtn'
@@ -44,6 +45,12 @@ export default {
 
     async getMnStock(req, res) {
         await MaintenanceStock.findAll()
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
+    },
+
+    async getMnStockControl(req, res) {
+        await MaintenanceSparepartControlStcok.findAll()
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
     },
@@ -138,6 +145,14 @@ export default {
             .catch((err) => res.status(500).json(err))
     },
 
+    async getMnStockControlById(req, res) {
+        await MaintenanceSparepartControlStcok.findOne({
+            where: { uuid: req.params.id },
+        })
+            .then((x) => res.status(200).json(x))
+            .catch((err) => res.status(500).json(err))
+    },
+
     async getMnErpById(req, res) {
         await PgMowMtn.findOne({ where: { sheet_no: req.params.id } })({
             where: {
@@ -198,6 +213,15 @@ export default {
     async saveMnStockById(req, res) {
         const data = req.body
         await MaintenanceStock.upsert(data)
+            .then(([instance, created]) => {
+                res.status(200).json(data)
+            })
+            .catch((err) => res.status(500).json(err))
+    },
+
+    async saveMnStockControlById(req, res) {
+        const data = req.body
+        await MaintenanceSparepartControlStcok.upsert(data)
             .then(([instance, created]) => {
                 res.status(200).json(data)
             })

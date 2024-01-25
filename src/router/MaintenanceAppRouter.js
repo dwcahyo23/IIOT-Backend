@@ -8,6 +8,7 @@ export default (app) => {
     app.get('/mnmachine', verifyToken, MaintenanceApp.getMnMachine)
     app.get('/mnsparepart', verifyToken, MaintenanceApp.getMnSparepart)
     app.get('/mnstock', verifyToken, MaintenanceApp.getMnStock)
+    app.get('/mnstockcontrol', verifyToken, MaintenanceApp.getMnStockControl)
     app.get('/mnerp', verifyToken, MaintenanceApp.getMnErp)
     app.get('/stokmnerp', MaintenanceApp.getMnStokErp)
     app.get('/issumnerp', MaintenanceApp.getMnIssuErp)
@@ -22,6 +23,11 @@ export default (app) => {
         MaintenanceApp.getMnSparepartById
     )
     app.get('/mnstockid/:id', verifyToken, MaintenanceApp.getMnStockById)
+    app.get(
+        '/mnstockcontrolid/:id',
+        verifyToken,
+        MaintenanceApp.getMnStockControlById
+    )
     app.get('/mnerpid/:id', verifyToken, MaintenanceApp.getMnErpById)
 
     //? SAVE DATA BY ID
@@ -34,6 +40,11 @@ export default (app) => {
         MaintenanceApp.saveMnSparepartById
     )
     app.patch('/mnstockid/:id', verifyToken, MaintenanceApp.saveMnStockById)
+    app.patch(
+        '/mnstockcontrolid/:id',
+        verifyToken,
+        MaintenanceApp.saveMnStockControlById
+    )
 
     //! REMOVE DATA BY ID
     app.delete(
