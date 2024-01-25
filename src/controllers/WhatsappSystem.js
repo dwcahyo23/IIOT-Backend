@@ -409,7 +409,11 @@ export default {
             .then((x) => {
                 const y = _.chain(x)
                     .groupBy('sheet_no')
-                    .map((value, sheet_no) => ({ sheet_no, value }))
+                    .map((value, sheet_no) => ({
+                        sheet_no,
+                        com: value[0].mch_com,
+                        value,
+                    }))
                     .value()
 
                 res.status(200).json(y)
