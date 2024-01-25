@@ -406,7 +406,14 @@ export default {
             },
             order: [['sheet_no', 'ASC']],
         })
-            .then((x) => res.status(200).json(x))
+            .then((x) => {
+                const y = _.chain(x)
+                    .groupBy('sheet_no')
+                    .map((value, sheet_no) => ({ sheet_no, value }))
+                    .value()
+
+                res.status(200).json(y)
+            })
             .catch((err) => res.status(500).json(err))
     },
 }
