@@ -84,7 +84,7 @@ export default {
                 const _x = _.map(x, (val) => {
                     return {
                         ...val,
-                        id: `${val.mat_no}${dayjs(val.modi_time).unix()}`,
+                        id: `${val.stk_no}${dayjs(val.modi_time).unix()}`,
                     }
                 })
                 res.status(200).json(_x)
@@ -101,7 +101,7 @@ export default {
                 const _x = _.map(x, (val) => {
                     return {
                         ...val,
-                        id: `${val.mat_no}${dayjs(val.modi_time).unix()}`,
+                        id: `${val.stk_no}${dayjs(val.modi_time).unix()}`,
                     }
                 })
                 res.status(200).json(_x)
