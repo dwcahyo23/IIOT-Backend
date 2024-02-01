@@ -109,6 +109,28 @@ export default {
             .catch((err) => res.status(500).json(err))
     },
 
+    async getMnPurErp(req, res) {
+        await pg2
+            .query(
+                "SELECT a.*, b.mat_name  FROM sch_ot.mat_pur_mast_view a left join sch_ot.bas_mat_mast b on a.mat_no = b.mat_no where pur_sheet_no like 'MRE%' and date_part('year', pp_ymd) >= 2023 order by a.pur_sheet_no desc",
+                {
+                    type: QueryTypes.SELECT,
+                }
+            )
+            .then((x) => {
+                const _x = _.map(x, (val) => {
+                    return {
+                        ...val,
+                        mat_no: _.trim(val.mat_no),
+                        pur_sheet_no: _.trim(val.pur_sheet_no),
+                        id: `${_.trim(val.mat_no)}${_.trim(val.pur_sheet_no)}`,
+                    }
+                })
+                res.status(200).json(_x)
+            })
+            .catch((err) => res.status(500).json(err))
+    },
+
     //? GET DATA BY ID
 
     async getMnReportById(req, res) {

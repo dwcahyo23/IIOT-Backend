@@ -4,7 +4,7 @@ import { verifyToken } from '../middleware/verifyToken.js'
 export default (app) => {
     //? GET DATA
     app.get('/mnreport', verifyToken, MaintenanceApp.getMnReport)
-    app.get('/mnrequest', verifyToken, MaintenanceApp.getMnRequest)
+    app.get('/mnrequest', MaintenanceApp.getMnRequest)
     app.get('/mnmachine', verifyToken, MaintenanceApp.getMnMachine)
     app.get('/mnsparepart', verifyToken, MaintenanceApp.getMnSparepart)
     app.get('/mnstock', verifyToken, MaintenanceApp.getMnStock)
@@ -12,6 +12,7 @@ export default (app) => {
     app.get('/mnerp', verifyToken, MaintenanceApp.getMnErp)
     app.get('/stokmnerp', MaintenanceApp.getMnStokErp)
     app.get('/issumnerp', MaintenanceApp.getMnIssuErp)
+    app.get('/purmnerp', MaintenanceApp.getMnPurErp)
 
     //? GET DATA BY ID
     app.get('/mnreportid/:id', verifyToken, MaintenanceApp.getMnReportById)

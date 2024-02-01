@@ -245,3 +245,21 @@ export const MaintenanceUser = mysql.define(
     },
     { timestamps: false }
 )
+
+// export const MaintenanceLifeTimeScyn = mysql.define('MaintenanceLifeTimeScyn', {
+//     uuid: {
+//         type: DataTypes.STRING(8),
+//         defaultValue: DataTypes.UUIDV4,
+//         primaryKey: true,
+//     },
+//     mch_code: DataTypes.STRING(8),
+//     mch_com: DataTypes.STRING(8),
+//     mat_code: DataTypes.STRING,
+//     mat_name: DataTypes.STRING,
+//     category: DataTypes.STRING,
+//     item_life_time: DataTypes.FLOAT,
+//     item_lead_time: DataTypes.FLOAT,
+//     sheet_no: DataTypes.STRING,
+//     remarks: DataTypes.STRING,
+
+// })
