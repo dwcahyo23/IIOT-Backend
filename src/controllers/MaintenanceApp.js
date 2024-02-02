@@ -112,7 +112,7 @@ export default {
     async getMnPurErp(req, res) {
         await pg2
             .query(
-                "SELECT a.*, b.mat_name  FROM sch_ot.mat_pur_mast_view a left join sch_ot.bas_mat_mast b on a.mat_no = b.mat_no where pur_sheet_no like 'MRE%' and date_part('year', pp_ymd) >= 2023 order by a.pur_sheet_no desc",
+                "SELECT a.*, b.mat_name  FROM sch_ot.mat_pur_mast_view a left join sch_ot.bas_mat_mast b on a.mat_no = b.mat_no where pur_sheet_no like 'MRE%' and a.mat_no like any (array['A%', 'H%']) and date_part('year', pp_ymd) >= 2023 order by a.pur_sheet_no desc",
                 {
                     type: QueryTypes.SELECT,
                 }
