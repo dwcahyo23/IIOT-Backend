@@ -6,5 +6,5 @@ export default (app) => {
     app.get('/newsWorderOpen', WhatsappSystem.worderTodayOpen)
     app.get('/newsWorderClose', WhatsappSystem.worderTodayClose)
     app.get('/newsLog', WhatsappSystem.getLog)
-    app.get('/sprtbreakdown', WhatsappSystem.getSparepartBreakdown)
+    app.post('/sprtbreakdown/:cat/:com', WhatsappSystem.getSparepart)
 }

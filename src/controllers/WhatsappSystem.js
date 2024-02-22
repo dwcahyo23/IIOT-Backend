@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import { Op, Sequelize, QueryTypes } from 'sequelize'
 import {
     WhatsappUser,
     WhatsappConfig,
@@ -10,7 +10,8 @@ import {
     MaintenanceRequest,
 } from '../models/MaintenanceSystemModel'
 import dayjs from 'dayjs'
-import _ from 'lodash'
+import _, { uniqBy } from 'lodash'
+import pg2 from '../config/pg2'
 
 export default {
     async getUser(req, res) {
@@ -396,29 +397,137 @@ export default {
         }
     },
 
-    async getSparepartBreakdown(req, res) {
+    async getSparepart(req, res) {
+        const { cat, com } = req.params
         await MaintenanceRequest.findAll({
             where: {
+                [Op.and]: [
+                    Sequelize.where(
+                        Sequelize.fn('date', Sequelize.col('createdAt')),
+                        '>=',
+                        '2024-01-01'
+                    ),
+                ],
                 category_request: {
-                    [Op.in]: ['Breakdown', '01', 'Workshop Breakdown', '05'],
+                    [Op.eq]: cat,
                 },
-                audit_request: 'N',
-                item_ready: 'N',
+                mch_com: {
+                    [Op.eq]: com,
+                },
+                audit_request: {
+                    [Op.eq]: 'N',
+                },
             },
+            attributes: [
+                'sheet_no',
+                'mch_com',
+                'mch_code',
+                'item_stock',
+                'item_qty',
+                'item_uom',
+                'mre_request',
+                'item_ready',
+                'date_request',
+            ],
             order: [['sheet_no', 'ASC']],
         })
-            .then((x) => {
-                const y = _.chain(x)
-                    .groupBy('sheet_no')
-                    .map((value, sheet_no) => ({
-                        sheet_no,
-                        com: value[0].mch_com,
-                        mch_code: value[0].mch_code,
-                        value,
+            .then(async (x) => {
+                if (x.length < 1) {
+                    return res.status(200).json([])
+                }
+                const sheet_no = await _.map(x, (val) => val.sheet_no)
+                let mre_request = []
+                await _.forEach(x, (val) => {
+                    val.mre_request.length > 1 &&
+                        mre_request.push(val.mre_request)
+                })
+
+                const y = await PgMowMtn.findAll({
+                    where: { sheet_no: { [Op.in]: sheet_no } },
+                    attributes: [
+                        'sheet_no',
+                        'mch_no',
+                        'com_no',
+                        'memo',
+                        'ymd',
+                        'chk_mark',
+                        'pri_no',
+                    ],
+                })
+
+                let z
+
+                const mat_pur_mast_view = (params) => {
+                    return (z = _.map(params, (val) => {
+                        return {
+                            mat_no: _.trim(val.mat_no),
+                            pur_sheet_no: _.trim(val.pur_sheet_no),
+                            ove_mk: val.ove_mk,
+                            ship_ymd: val.ship_ymd,
+                            eta_ymd: val.eta_ymd,
+                            mat_name: val.mat_name,
+                            qty: val.qty,
+                        }
+                    }))
+                    // z = params
+                }
+
+                await pg2
+                    .query(
+                        'SELECT a.*, b.mat_name  FROM sch_ot.mat_pur_mast_view a left join sch_ot.bas_mat_mast b on a.mat_no = b.mat_no where a.pur_sheet_no IN (:mre) order by a.pur_sheet_no desc',
+                        {
+                            replacements: { mre: mre_request },
+                            type: QueryTypes.SELECT,
+                        }
+                    )
+                    .then((r) => mat_pur_mast_view(r))
+
+                const chaintes = await _.chain(x)
+                    .groupBy('mch_code')
+                    .mapValues((j) => {
+                        // const uniq = _.map(
+                        //     _.uniqBy(j, 'mre_request'),
+                        //     (val) => val.mre_request
+                        // )
+
+                        const map = _.map(j, (val) => {
+                            const mow = _.find(y, { sheet_no: val.sheet_no })
+                            return {
+                                ...mow.dataValues,
+                                stock: _.trim(val.item_stock),
+                                request_qty: val.item_qty,
+                                request_uom: val.item_uom,
+                                mre_request: _.trim(val.mre_request),
+                                request_ready: val.item_ready,
+                                date_request: val.date_request,
+                            }
+                        })
+
+                        const sheet_no = _(map)
+                            .groupBy('sheet_no')
+                            .map((h, j) => {
+                                return {
+                                    j,
+                                    h,
+                                    i: _.filter(z, (val) => {
+                                        return _.includes(
+                                            _.uniqBy(h, 'mre_request').map(
+                                                (r) => r.mre_request
+                                            ),
+                                            val.pur_sheet_no
+                                        )
+                                    }),
+                                }
+                            })
+                        return { sheet_no }
+                    })
+                    .map((value, index) => ({
+                        index,
+                        ...value,
                     }))
                     .value()
 
-                res.status(200).json(y)
+                return res.status(200).json(chaintes)
             })
             .catch((err) => res.status(500).json(err))
     },
