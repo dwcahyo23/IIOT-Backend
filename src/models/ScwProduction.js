@@ -5,7 +5,7 @@ const { DataTypes } = Sequelize
 
 export const ProductionSCW = mysql.define('ProductionSCW', {
     uuid: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(8),
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
@@ -25,7 +25,10 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
         type: DataTypes.STRING,
     },
     problem: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.TEXT,
+    },
+    remarks: {
+        type: DataTypes.TEXT,
     },
     start_time: {
         type: DataTypes.DATE,
@@ -37,6 +40,15 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
         type: DataTypes.STRING,
     },
     finished_by: {
+        type: DataTypes.STRING,
+    },
+    no_drawing: {
+        type: DataTypes.STRING,
+    },
+    dept: {
+        type: DataTypes.STRING,
+    },
+    name_prd: {
         type: DataTypes.STRING,
     },
     status: {

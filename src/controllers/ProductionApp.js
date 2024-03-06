@@ -7,7 +7,10 @@ import { ProductionSCW } from '../models/ScwProduction'
 export default {
     //? GET DATA
     async getPDSCW(req, res) {
-        await ProductionSCW.findAll({ order: [['createdAt', 'DESC']] })
+        await ProductionSCW.findAll({
+            where: { Status: { [Op.ne]: 'Cancel' } },
+            order: [['createdAt', 'DESC']],
+        })
             .then((x) => res.status(200).json(x))
             .catch((err) => res.status(500).json(err))
     },
