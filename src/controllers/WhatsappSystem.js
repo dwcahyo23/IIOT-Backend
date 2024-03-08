@@ -61,7 +61,9 @@ export default {
                                 Sequelize.where(
                                     Sequelize.fn('date', Sequelize.col('ymd')),
                                     '>=',
-                                    dayjs().format('YYYY-MM-DD')
+                                    dayjs()
+                                        .subtract(3, 'month')
+                                        .format('YYYY-MM-DD')
                                 ),
                                 //? Dev
 
@@ -217,7 +219,9 @@ export default {
                                             Sequelize.col('ymd')
                                         ),
                                         '>=',
-                                        '2023-08-28'
+                                        dayjs()
+                                            .subtract(3, 'month')
+                                            .format('YYYY-MM-DD')
                                         // dayjs().format('YYYY-MM-DD')
                                     ),
                                     {
