@@ -26,9 +26,11 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
     },
     problem: {
         type: DataTypes.TEXT,
+        defaultValue: '',
     },
     remarks: {
         type: DataTypes.TEXT,
+        defaultValue: '',
     },
     start_time: {
         type: DataTypes.DATE,
@@ -44,12 +46,14 @@ export const ProductionSCW = mysql.define('ProductionSCW', {
     },
     no_drawing: {
         type: DataTypes.STRING,
+        defaultValue: '',
     },
     dept: {
         type: DataTypes.STRING,
     },
     name_prd: {
         type: DataTypes.STRING,
+        defaultValue: '',
     },
     status: {
         type: DataTypes.STRING,
